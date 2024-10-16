@@ -1,0 +1,3 @@
+export enum AuthenticationStates {
+    UPDATE_AUTHENTICATION_STATE = 'UPDATE_AUTHENTICATION_STATE'
+}

@@ -1,5 +1,6 @@
 import {useDispatch} from 'react-redux';
 import {useNavigate} from "react-router-dom";
+import {AuthenticationStates} from "../../types/enums/Authentication-states.ts";
 
 export default function Auth() {
     const dispatch = useDispatch();
@@ -7,7 +8,7 @@ export default function Auth() {
 
     function authenticate() {
         dispatch({
-            type: 'UPDATE_AUTHENTICATION_STATE',
+            type: AuthenticationStates.UPDATE_AUTHENTICATION_STATE,
             payload: true
         });
 
