@@ -6,8 +6,6 @@ export const useAuthGuard = (isAuth: boolean) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(isAuth);
-
         if (!isAuth) {
             navigate("/auth");
         }

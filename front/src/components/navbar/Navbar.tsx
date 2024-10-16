@@ -16,10 +16,10 @@ function CMSBNavbar() {
                         <Nav className="me-auto">
                             <NavLink to={"/"} className={({isActive, isPending}) =>
                                 isPending ? "link pending" : isActive ? "link active" : "link"}>Dashboard</NavLink>
-                            <NavLink to="profile" className={({isActive, isPending}) =>
-                                isPending ? "link pending" : isActive ? "link active" : "link"}>Profile</NavLink>
                             <NavLink to="stock" className={({isActive, isPending}) =>
                                 isPending ? "link pending" : isActive ? "link active" : "link"}>Stock</NavLink>
+                            <NavLink to="profile" className={({isActive, isPending}) =>
+                                isPending ? "link pending" : isActive ? "link active" : "link"}>Profile</NavLink>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

@@ -1,13 +1,31 @@
-import {AuthProps} from "../../types/interfaces/AuthProps";
 import {useAuthGuard} from "../auth/AuthGuard.ts";
-import {Form} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import './Dashboard.css';
 import {useSelector} from "react-redux";
+import {useState} from "react";
+import {generate} from "../../services/images/generateImages.service.ts";
 
 export default function Dashboard() {
+    const [imagePrompt, setImagePrompt] = useState('');
+    const [descriptionPrompt, setDescriptionPrompt] = useState('');
+
     const isAuth = useSelector(
         (state) => state.authenticationReducer.isAuth
     );
+
+    function submit() {
+        if (!imagePrompt || !imagePrompt.trim()) {
+            alert("You have to fill the mandatory inputs.");
+            return;
+        }
+
+        if (!descriptionPrompt || !descriptionPrompt.trim()) {
+            alert("You have to fill the mandatory inputs.");
+            return;
+        }
+
+        generate(imagePrompt, descriptionPrompt).then(r => console.log(r));
+    }
 
     useAuthGuard(isAuth);
 
@@ -17,12 +35,13 @@ export default function Dashboard() {
             <Form>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Image</Form.Label>
-                    <Form.Control as="textarea" placeholder="Your image prompt here" />
+                    <Form.Control onChange={(e) => setImagePrompt(e.target.value)} as="textarea" placeholder="Your image prompt here" />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" placeholder="Your description prompt here" />
+                    <Form.Control onChange={(e) => setDescriptionPrompt(e.target.value)} as="textarea" placeholder="Your description prompt here" />
                 </Form.Group>
+                <Button onClick={submit}>Generate!</Button>
             </Form>
         </div>
     )
