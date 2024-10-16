@@ -4,6 +4,8 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Dashboard from "./pages/dashboard/Dashboard.tsx";
 import Auth from "./pages/auth/Auth.tsx";
 import {useSelector} from "react-redux";
+import CMSBNavbar from "./components/navbar/Navbar.tsx";
+import Stock from "./pages/stock/Stock.tsx";
 
 function App() {
 
@@ -13,11 +15,15 @@ function App() {
 
     return (
           <BrowserRouter>
-              <Routes>
-                  <Route exact path="/" element={<Dashboard isAuth={isAuth}/>}/>
-                  <Route exact path="/profile" element={<Profile/>}/>
-                  <Route exact path="/auth" element={<Auth/>}/>
-              </Routes>
+              <CMSBNavbar/>
+              <div className={"application-body"}>
+                  <Routes>
+                      <Route exact path="/" element={<Dashboard/>}/>
+                      <Route exact path="/profile" element={<Profile/>}/>
+                      <Route exact path="/auth" element={<Auth/>}/>
+                      <Route exact path="/stock" element={<Stock/>}/>
+                  </Routes>
+              </div>
           </BrowserRouter>
   )
 }
