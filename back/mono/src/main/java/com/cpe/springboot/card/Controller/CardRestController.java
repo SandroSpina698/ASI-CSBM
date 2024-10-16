@@ -65,6 +65,4 @@ public class CardRestController {
 	public void deleteUser(@PathVariable String id) {
 		cardModelService.deleteCardModel(Integer.valueOf(id));
 	}
-
-	
 }
