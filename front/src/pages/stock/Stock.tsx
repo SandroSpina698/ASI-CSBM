@@ -2,7 +2,7 @@ import {AuthProps} from "../../types/interfaces/AuthProps";
 import {useAuthGuard} from "../auth/AuthGuard.ts";
 import {useSelector} from "react-redux";
 
-export default function Profile() {
+export default function Stock() {
     const isAuth = useSelector(
         (state) => state.authenticationReducer.isAuth
     );
@@ -10,6 +10,6 @@ export default function Profile() {
     useAuthGuard(isAuth);
 
     return (
-        <>test profile</>
+        <>Stock works!</>
     )
 }

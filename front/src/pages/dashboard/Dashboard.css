@@ -1,0 +1,13 @@
+.dashboard-container {
+    background-color: #888888;
+    padding: 4rem;
+    border-radius: 1rem;
+    -webkit-box-shadow: 5px 5px 15px 5px rgba(0,0,0,0.33);
+    box-shadow: 5px 5px 15px 5px rgba(0,0,0,0.33);
+    margin: auto;
+    max-width: 50%;
+}
+
+.title {
+    color: white;
+}
