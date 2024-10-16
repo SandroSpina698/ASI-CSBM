@@ -1,4 +1,4 @@
-package com.cpe.springboot.jms.service;
+package com.cpe.springboot.jms;
 
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

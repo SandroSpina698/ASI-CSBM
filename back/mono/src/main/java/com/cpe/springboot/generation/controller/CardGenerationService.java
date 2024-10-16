@@ -1,17 +1,19 @@
 package com.cpe.springboot.generation.controller;
 
 import com.cpe.springboot.generation.model.GenerationJobUtils;
-import com.cpe.springboot.generation.model.RequestDTO;
 import com.cpe.springboot.generation.model.ResultDTO;
-import com.cpe.springboot.jms.service.ActiveMQProducer;
+import com.cpe.springboot.jms.ActiveMQProducer;
 import com.cpe.springboot.job.controller.JobService;
-import com.cpe.springboot.job.model.*;
+import com.cpe.springboot.job.model.Job;
+import com.cpe.springboot.job.model.JobResultDTO;
+import com.cpe.springboot.job.model.JobStep;
+import com.cpe.springboot.job.model.JobUtils;
 import com.cpe.springboot.store.model.CardGenerationOrder;
 import lombok.AllArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -21,20 +23,22 @@ public class CardGenerationService {
     private ActiveMQProducer producer;
 
     public int generate(CardGenerationOrder cardGenerationOrder) {
+        // Create initial job with metadata
         Job job = Job.builder()
-                .metadata(Map.of("user_id", String.valueOf(cardGenerationOrder.getUser_id()), "store_id", String.valueOf(cardGenerationOrder.getStore_id())))
+                .metadata(new HashMap<>(Map.of("user_id", String.valueOf(cardGenerationOrder.getUser_id()), "store_id", String.valueOf(cardGenerationOrder.getStore_id()))))
                 .build();
-
         Job savedJob = jobService.saveJob(job);
 
-        JobStep imageStep = GenerationJobUtils.createImageGenerationJobStep(savedJob.getId(), cardGenerationOrder.getPrompt(), producer);
-        JobStep textStep = GenerationJobUtils.createTextGenerationJobStep(savedJob.getId(), cardGenerationOrder.getPrompt(), producer);
-        savedJob.setSteps(List.of(imageStep, textStep));
+        // Create steps for the job
+        JobStep imageStep = GenerationJobUtils.createImageGenerationJobStep(savedJob, cardGenerationOrder.getPrompt(), producer);
+        JobStep textStep = GenerationJobUtils.createTextGenerationJobStep(savedJob, cardGenerationOrder.getPrompt(), producer);
+        savedJob.setSteps(Arrays.asList(imageStep, textStep));
+        jobService.saveJobSteps(Arrays.asList(imageStep,textStep));
 
-        savedJob = jobService.saveJob(savedJob);
-
-        return jobService.execJob(savedJob);
+        // Execute the job and return the result
+        return jobService.execJob(job);
     }
+
 
     public boolean continueGeneration(ResultDTO resultDTO) {
 
