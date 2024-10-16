@@ -1,5 +1,6 @@
 package com.cpe.springboot.generation.controller;
 
+import com.cpe.springboot.generation.model.ResultDTO;
 import com.cpe.springboot.job.model.JobResultDTO;
 import com.cpe.springboot.store.model.CardGenerationOrder;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class CardGenerationGenerationController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/continue")
-    public boolean continueGeneration(@RequestBody JobResultDTO jobResultDTO){
-        return generationService.continueGeneration(jobResultDTO);
+    public boolean continueGeneration(@RequestBody ResultDTO resultDTO){
+        return generationService.continueGeneration(resultDTO);
     }
 }

@@ -14,7 +14,8 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class JobService {
-    private final JobRepository jobRepository;
+    public final JobRepository jobRepository;
+    public final JobStepRepository jobStepRepository;
 
     public List<Job> getAllJobs() {
         return (List<Job>) jobRepository.findAll();
@@ -42,9 +43,7 @@ public class JobService {
             step.setStatus(JobStatus.RUNNING);
             step.getRunnable().run();
         }
-
-        Job savedJob = jobRepository.save(job);
-        return savedJob.getId();
+        return job.getId();
     }
 
     public Job updateJobStep(JobResultDTO jobResult) {
@@ -80,5 +79,9 @@ public class JobService {
 
     public Job saveJob(Job job) {
         return jobRepository.save(job);
+    }
+
+    public List<JobStep> saveJobSteps(List<JobStep> steps) {
+        return (List<JobStep>) jobStepRepository.saveAll(steps);
     }
 }

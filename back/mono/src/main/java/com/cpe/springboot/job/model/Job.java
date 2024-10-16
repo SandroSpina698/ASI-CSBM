@@ -1,9 +1,6 @@
 package com.cpe.springboot.job.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -19,7 +16,13 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @OneToMany(mappedBy = "job")
     private List<JobStep> steps;
+    @Enumerated(EnumType.STRING)
     private JobStatus status;
+    @ElementCollection
+    @CollectionTable(name = "job_metadata", joinColumns = @JoinColumn(name = "job_id"))
+    @MapKeyColumn(name = "metadata_key")
+    @Column(name = "metadata_value")
     private Map<String, String> metadata;
 }
