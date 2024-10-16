@@ -1,0 +1,17 @@
+.brand {
+    color: #242424;
+    font-size: larger;
+}
+
+.brand:hover {
+    color: #242424;
+}
+
+.link {
+    margin: auto 1rem;
+    color: #242424;
+}
+
+.link.active {
+    color: #535bf2;
+}

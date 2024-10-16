@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.cpe.springboot.card.model.CardDTO;
+import com.cpe.springboot.job.controller.JobService;
 import org.springframework.stereotype.Service;
 
 import com.cpe.springboot.card.Controller.CardModelService;
@@ -20,14 +21,16 @@ public class StoreService {
 	private final CardModelService cardService;
 	private final UserService userService;
 	private final StoreRepository storeRepository;
+	private final JobService jobService;
 
 	public final static Integer CURRENT_STORE_ID = -1;
 
-	public StoreService(CardModelService cardService, UserService userService, StoreRepository storeRepository) {
+	public StoreService(CardModelService cardService, UserService userService, StoreRepository storeRepository, JobService jobService) {
 		this.cardService = cardService;
 		this.userService = userService;
 		this.storeRepository = storeRepository;
-	}
+        this.jobService = jobService;
+    }
 
 	public boolean buyCardInternal(Integer user_id, Integer card_id) {
 		return buyCard(user_id, card_id, CURRENT_STORE_ID);
@@ -110,4 +113,6 @@ public class StoreService {
 		storeRepository.save(sT);
 		return true;
 	}
+
+
 }
