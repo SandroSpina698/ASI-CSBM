@@ -1,6 +1,6 @@
-package com.csbm.generate.picture;
+package com.csbm.generate.text;
 
-import com.csbm.generate.picture.service.JobGeneratePictureService;
+import com.csbm.generate.text.service.JobGeneratePictureService;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,6 +1,5 @@
-package com.csbm.generate.picture.model.DTO;
+package com.csbm.generate.text.model.DTO;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

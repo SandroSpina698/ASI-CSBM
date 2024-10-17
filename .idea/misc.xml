@@ -6,6 +6,7 @@
       <list>
         <option value="$PROJECT_DIR$/back/mono/pom.xml" />
         <option value="$PROJECT_DIR$/back/generate-picture-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/back/generate-text-ms/pom.xml" />
       </list>
     </option>
   </component>

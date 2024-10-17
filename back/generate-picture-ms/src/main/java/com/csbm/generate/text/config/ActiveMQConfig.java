@@ -1,4 +1,4 @@
-package com.csbm.generate.picture.config;
+package com.csbm.generate.text.config;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
