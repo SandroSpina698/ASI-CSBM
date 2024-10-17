@@ -29,7 +29,7 @@ public class GeneratePictureApplication {
 	public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(ActiveMQConnectionFactory connectionFactory) {
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		factory.setConnectionFactory(connectionFactory);
-		factory.setPubSubDomain(true);  // Important : true pour les topics, false pour les queues
+		factory.setPubSubDomain(false);  // Important : true pour les topics, false pour les queues
 		return factory;
 	}
 

@@ -43,13 +43,13 @@ public class JobGeneratePictureService {
         System.out.println("Beginning generation ...");
         JsonNode response = restTemplate.postForObject(url, imageRequestDTO, JsonNode.class);
         System.out.println("End of generation ...");
-        imageRequestDTO.getMetadata().put("url",serverGen+response.get("url"));
+        imageRequestDTO.getMetadata().put("url",serverGen+response.get("url").asText());
         return imageRequestDTO;
     }
 
     public void sendResponseToMono(ImageRequestDTO imageRequestDTO) {
         String url = monoServer;
         System.out.println("Response to mono server ... (url : "+imageRequestDTO.getMetadata().get("url")+")");
-        JsonNode response = restTemplate.postForObject(url, imageRequestDTO, JsonNode.class);
+        Boolean response = restTemplate.postForObject(url, imageRequestDTO, Boolean.class);
     }
 }
