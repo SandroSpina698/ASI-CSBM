@@ -37,13 +37,13 @@ public class JobService {
         return jobRepository.findByStatus(JobStatus.FAILED);
     }
 
-    public int execJob(Job job){
+    public Job execJob(Job job){
         job.setStatus(JobStatus.RUNNING);
         for (JobStep step : job.getSteps()){
             step.setStatus(JobStatus.RUNNING);
             step.getRunnable().run();
         }
-        return job.getId();
+        return job;
     }
 
     public Job updateJobStep(JobResultDTO jobResult) {

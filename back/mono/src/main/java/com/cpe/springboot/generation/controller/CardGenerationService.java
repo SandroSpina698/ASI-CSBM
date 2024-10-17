@@ -36,7 +36,7 @@ public class CardGenerationService {
         jobService.saveJobSteps(Arrays.asList(imageStep,textStep));
 
         // Execute the job and return the result
-        return jobService.execJob(job);
+        return jobService.execJob(job).getId();
     }
 
 

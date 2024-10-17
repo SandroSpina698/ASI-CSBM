@@ -1,7 +1,6 @@
 package com.cpe.springboot.generation.controller;
 
 import com.cpe.springboot.generation.model.ResultDTO;
-import com.cpe.springboot.job.model.JobResultDTO;
 import com.cpe.springboot.store.model.CardGenerationOrder;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
