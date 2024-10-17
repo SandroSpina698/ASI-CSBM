@@ -1,19 +1,13 @@
-package com.csbm.generate.picture.service;
+package com.csbm.generate.text.service;
 
-import com.csbm.generate.picture.model.DTO.ImageRequestDTO;
+import com.csbm.generate.text.model.DTO.ImageRequestDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.web.client.RestTemplate;
-
-import org.springframework.http.HttpHeaders;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JobGeneratePictureService {
     private final ObjectMapper om = new ObjectMapper();
