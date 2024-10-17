@@ -1,14 +1,14 @@
-package com.csbm.generate_picture;
+package com.csbm.generate.picture;
 
-import com.csbm.generate_picture.service.JobGeneratePictureService;
+import com.csbm.generate.picture.service.JobGeneratePictureService;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.web.client.RestTemplate;
 
 @EnableJms
 @Configuration
@@ -16,17 +16,13 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 public class GeneratePictureApplication {
 
 	@Bean
-	public JobGeneratePictureService getJobGeneratePictureService() {
-		return new JobGeneratePictureService();
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 
 	@Bean
-	public ActiveMQConnectionFactory connectionFactory() {
-		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-		factory.setBrokerURL("tcp://localhost:61616");
-		factory.setUserName("myuser");
-		factory.setPassword("mypwd");
-		return factory;
+	public JobGeneratePictureService getJobGeneratePictureService() {
+		return new JobGeneratePictureService();
 	}
 
 	@Bean
