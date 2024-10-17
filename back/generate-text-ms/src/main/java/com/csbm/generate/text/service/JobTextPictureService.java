@@ -34,7 +34,7 @@ public class JobTextPictureService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Parsing error");
         }
-        generateText(textGenerateDTO,textRequestDTO);
+        sendResponseToMono(generateText(textGenerateDTO,textRequestDTO));
     }
 
     public TextRequestDTO generateText(TextGenerateDTO textGenerateDTO, TextRequestDTO textRequestDTO) {
@@ -48,7 +48,7 @@ public class JobTextPictureService {
 
     public void sendResponseToMono(TextRequestDTO textRequestDTO) {
         String url = monoServer;
-        System.out.println("Response to mono server ... (url : "+ textRequestDTO.getMetadata().get("url")+")");
+        System.out.println("Response to mono server ... (description : "+ textRequestDTO.getMetadata().get("description")+")");
         Boolean response = restTemplate.postForObject(url, textRequestDTO, Boolean.class);
     }
 }
