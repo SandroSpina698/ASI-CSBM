@@ -1,5 +1,7 @@
 package com.cpe.springboot.generation.controller;
 
+import com.cpe.springboot.card.Controller.CardModelService;
+import com.cpe.springboot.card.model.CardModel;
 import com.cpe.springboot.generation.model.GenerationJobUtils;
 import com.cpe.springboot.generation.model.ResultDTO;
 import com.cpe.springboot.jms.ActiveMQProducer;
@@ -9,7 +11,12 @@ import com.cpe.springboot.job.model.JobResultDTO;
 import com.cpe.springboot.job.model.JobStep;
 import com.cpe.springboot.job.model.JobUtils;
 import com.cpe.springboot.store.model.CardGenerationOrder;
+import com.cpe.springboot.user.controller.UserService;
+import com.cpe.springboot.user.model.UserModel;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -20,7 +27,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class CardGenerationService {
     private final JobService jobService;
+    private final UserService userService;
     private ActiveMQProducer producer;
+    private final ObjectMapper om = new ObjectMapper();
 
     public int generate(CardGenerationOrder cardGenerationOrder) {
         // Create initial job with metadata
@@ -48,7 +57,7 @@ public class CardGenerationService {
 
         // Properties generation ended case
         if (JobUtils.metadataContainKey(jobResultDTO, "last-step")) {
-            // TODO :: add card ...
+            addCard(jobResultDTO);
         }else{
             // A step is finished
             Job job = jobService.updateJobStep(jobResultDTO);
@@ -57,6 +66,50 @@ public class CardGenerationService {
                 GenerationJobUtils.askPropertiesGeneration(jobResultDTO.getJob_id(), jobResultDTO.getMetadata().get("prompt"),producer);
             }
         }
+
+        return true;
+    }
+
+    @JmsListener(destination = "gen-props")
+    public void receivedMessage(String json) {
+        ResultDTO propGenResult = null;
+        try{
+            propGenResult = om.readValue(json, ResultDTO.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Parsing error");
+        }
+        continueGeneration(propGenResult);
+    }
+
+    public boolean addCard(JobResultDTO propGenResult){
+        Job job = jobService.getJobById(propGenResult.getJob_id());
+
+        JobStep imageStep = JobUtils.getStepByType(job, "image_generation");
+        JobStep textStep = JobUtils.getStepByType(job, "text_generation");
+
+
+        String name = propGenResult.getMetadata().get("name");
+        String description = textStep.getMetadata().get("description");
+        String family = propGenResult.getMetadata().get("family");
+        String affinity = propGenResult.getMetadata().get("affinity");
+        float energy = Float.valueOf(propGenResult.getMetadata().get("energy"));
+        float hp = Float.valueOf(propGenResult.getMetadata().get("hp"));
+        float defence = Float.valueOf(propGenResult.getMetadata().get("defence"));
+        float attack = Float.valueOf(propGenResult.getMetadata().get("attack"));
+        String imgUrl = imageStep.getMetadata().get("url");
+        String smallImg = null;
+        float price = Float.valueOf(propGenResult.getMetadata().get("price"));
+
+        CardModel card = new CardModel(name, description, family, affinity, energy, hp, defence, attack, imgUrl, smallImg, price);
+        UserModel user = userService.getUser(job.getMetadata().get("user_id")).get();
+        if (user.getAccount() < card.getPrice()){
+            throw new RuntimeException("Card is too expensive");
+        }
+
+        user.setAccount(user.getAccount()- card.getPrice());
+        user.addCard(card);
+
+        userService.updateUser(user);
 
         return true;
     }
