@@ -6,12 +6,9 @@ import Auth from "./pages/auth/Auth.tsx";
 import {useSelector} from "react-redux";
 import CMSBNavbar from "./components/navbar/Navbar.tsx";
 import Stock from "./pages/stock/Stock.tsx";
+import Market from "./pages/market/Market.tsx";
 
 function App() {
-
-    const isAuth = useSelector(
-        (state) => state.authenticationReducer.isAuth
-    );
 
     return (
           <BrowserRouter>
@@ -22,6 +19,7 @@ function App() {
                       <Route exact path="/profile" element={<Profile/>}/>
                       <Route exact path="/auth" element={<Auth/>}/>
                       <Route exact path="/stock" element={<Stock/>}/>
+                      <Route exact path="/market" element={<Market/>}/>
                   </Routes>
               </div>
           </BrowserRouter>
