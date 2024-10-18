@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -62,7 +63,8 @@ public class CardGenerationService {
             Job job = jobService.updateJobStep(jobResultDTO);
 
             if (JobUtils.everyStepsFinished(job)) {
-                GenerationJobUtils.askPropertiesGeneration(jobResultDTO.getJob_id(), jobResultDTO.getMetadata().get(""),producer);
+                JobStep imageStep = JobUtils.getStepByType(job, "image_generation");
+                GenerationJobUtils.askPropertiesGeneration(jobResultDTO.getJob_id(), imageStep.getMetadata().get("url"),producer);
             }
         }
 
@@ -76,19 +78,18 @@ public class CardGenerationService {
         JobStep textStep = JobUtils.getStepByType(job, "text_generation");
 
 
-        String name = propGenResult.getMetadata().get("name");
+        String name = null;
         String description = textStep.getMetadata().get("description");
-        String family = propGenResult.getMetadata().get("family");
-        String affinity = propGenResult.getMetadata().get("affinity");
-        float energy = Float.valueOf(propGenResult.getMetadata().get("energy"));
-        float hp = Float.valueOf(propGenResult.getMetadata().get("hp"));
-        float defence = Float.valueOf(propGenResult.getMetadata().get("defence"));
-        float attack = Float.valueOf(propGenResult.getMetadata().get("attack"));
+        String family = null;
+        String affinity = null;
+        float energy = Float.valueOf(propGenResult.getMetadata().get("ENERGY"));
+        float hp = Float.valueOf(propGenResult.getMetadata().get("HP"));
+        float defence = Float.valueOf(propGenResult.getMetadata().get("DEFENSE"));
+        float attack = Float.valueOf(propGenResult.getMetadata().get("ATTACK"));
         String imgUrl = imageStep.getMetadata().get("url");
         String smallImg = null;
-        float price = Float.valueOf(propGenResult.getMetadata().get("price"));
 
-        CardModel card = new CardModel(name, description, family, affinity, energy, hp, defence, attack, imgUrl, smallImg, price);
+        CardModel card = new CardModel(name, description, family, affinity, energy, hp, defence, attack, imgUrl, smallImg);
         UserModel user = userService.getUser(job.getMetadata().get("user_id")).get();
         if (user.getAccount() < card.getPrice()){
             throw new RuntimeException("Card is too expensive");

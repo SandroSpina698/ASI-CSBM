@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="generate-picture" />
         <module name="generate-text" />
+        <module name="generate-properties" />
         <module name="asi2-backendmarket-monolithic-student" />
         <module name="generate-picture (1)" />
       </profile>
@@ -19,6 +20,7 @@
       <module name="asi2-backendmarket-monolithic-student" options="-parameters" />
       <module name="generate-picture" options="-parameters" />
       <module name="generate-picture (1)" options="-parameters" />
+      <module name="generate-properties" options="-parameters" />
       <module name="generate-text" options="-parameters" />
     </option>
   </component>

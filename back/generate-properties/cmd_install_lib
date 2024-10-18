@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=./colorToproperties-1.1.2.jar -DgroupId=de.androidpit -DartifactId=colorToproperties -Dversion=1.1.2 -Dpackaging=jar -DgeneratePom=true

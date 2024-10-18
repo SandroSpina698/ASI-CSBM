@@ -18,14 +18,14 @@ import tp.cpe.ImgToProperties;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import static tp.cpe.ImgToProperties.getPropertiesFromImg;
+
 public class JobGeneratePropertyService {
     private final ObjectMapper om = new ObjectMapper();
-
-    @Value("${generate.server}")
-    private String serverGen;
 
     @Value("${mono.server}")
     private String monoServer;
@@ -39,47 +39,45 @@ public class JobGeneratePropertyService {
         try{
             propsRequest = om.readValue(json, PropsRequest.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Parsing error");
+            e.printStackTrace();
+            System.out.println("Parsing error");
         }
         sendResponseToMono(generateProperties(propsRequest));
     }
 
     public PropsRequest generateProperties(PropsRequest propsRequest)  {
+        //String imgUrl = propsRequest.getMetadata().get("url");
+        String imgUrl = "http://localhost:10000/imgs/default-2.jpg";
+
+        URL imageUrl = null;
         try {
-
-            String url = serverGen + "/prompt/req";
-//        String url = propsRequest.getMetadata().get("url");
-        System.out.println("Beginning generation of properties ...");
-        String imgUrl = propsRequest.getMetadata().get("url");
-        URL imageUrl = new URL(imgUrl);
-        BufferedImage image = ImageIO.read(imageUrl);
-        Set<Integer> colors = new HashSet<>();
-
-        int sumOfColors = 0;
-
-        // Loop through every pixel
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                int rgb = image.getRGB(x, y);  // Get RGB value
-                if (colors.add(rgb)) {  // Add only distinct values
-                    sumOfColors += rgb;  // Add the value to the sum
-                }
-            }
+            imageUrl = new URL(imgUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            System.out.println("Url build error");
         }
 
-        Map<String, Float> result = ImgToProperties.getPropertiesFromImg(imgUrl, 100f, sumOfColors,(new Random()).nextFloat(), false);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(imageUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Image reading error from url : " + imageUrl);
+        }
+
+        System.out.println("Beginning generation of properties ...");
+        Map<String, Float> properties = getPropertiesFromImg(imgUrl, 100f, 4,(new Random()).nextFloat(), false);
         System.out.println("End of generation ...");
 
-        return propsRequest;
-    } catch (IOException e) {
-        e.printStackTrace();
-    };
+        for (Map.Entry<String, Float> propEntry : properties.entrySet()){
+            propsRequest.getMetadata().put(propEntry.getKey(),String.valueOf(propEntry.getValue()));
+        }
+
         return propsRequest;
     }
 
     public void sendResponseToMono(PropsRequest propsRequest) {
         String url = monoServer;
-        System.out.println("Response to mono server ... (url : "+propsRequest.getMetadata().get("url")+")");
         Boolean response = restTemplate.postForObject(url, propsRequest, Boolean.class);
     }
 }

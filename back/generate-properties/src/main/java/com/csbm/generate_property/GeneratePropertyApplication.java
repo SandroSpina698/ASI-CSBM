@@ -8,30 +8,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.web.client.RestTemplate;
 
 @EnableJms
 @Configuration
 @SpringBootApplication
 public class GeneratePropertyApplication {
 	@Bean
-	public JobGeneratePropertyService getJobGeneratePictureService() {
-		return new JobGeneratePropertyService();
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 
 	@Bean
-	public ActiveMQConnectionFactory connectionFactory() {
-		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-		factory.setBrokerURL("tcp://localhost:61616");
-		factory.setUserName("myuser");
-		factory.setPassword("mypwd");
-		return factory;
+	public JobGeneratePropertyService getGeneratePropertyService() {
+		return new JobGeneratePropertyService();
 	}
 
 	@Bean
 	public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(ActiveMQConnectionFactory connectionFactory) {
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		factory.setConnectionFactory(connectionFactory);
-		factory.setPubSubDomain(true);  // Important : true pour les topics, false pour les queues
+		factory.setPubSubDomain(false);  // Important : true pour les topics, false pour les queues
 		return factory;
 	}
 

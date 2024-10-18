@@ -45,7 +45,7 @@ public class CardModel extends CardBasics{
 	}
 
 	public CardModel(String name, String description, String family, String affinity, float energy, float hp,
-					 float defence, float attack,String imgUrl,String smallImg,float price) {
+					 float defence, float attack,String imgUrl,String smallImg) {
 		super(name, description, family, affinity,imgUrl,smallImg);
 		this.energy = energy;
 		this.hp = hp;

@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.csbm</groupId>
-	<artifactId>generate_property</artifactId>
+	<artifactId>generate-properties</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>generate_property</name>
+	<name>Generate Properties</name>
 	<description>Generate property</description>
 	<url/>
 	<licenses>
@@ -76,6 +76,7 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.0.2</version>
 		</dependency>
+
 		<dependency>
 			<groupId>de.androidpit</groupId>
 			<artifactId>colorToproperties</artifactId>
