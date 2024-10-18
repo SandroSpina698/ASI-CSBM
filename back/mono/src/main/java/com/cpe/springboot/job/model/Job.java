@@ -16,7 +16,7 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @OneToMany(mappedBy = "job")
+    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY)
     private List<JobStep> steps;
     @Enumerated(EnumType.STRING)
     private JobStatus status;

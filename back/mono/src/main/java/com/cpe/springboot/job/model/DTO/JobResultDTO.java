@@ -1,4 +1,4 @@
-package com.cpe.springboot.job.model;
+package com.cpe.springboot.job.model.DTO;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

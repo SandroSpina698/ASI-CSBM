@@ -17,14 +17,14 @@ public class JobStep {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 
     @ElementCollection
     @CollectionTable(name = "job_step_metadata", joinColumns = @JoinColumn(name = "job_step_id"))
     @MapKeyColumn(name = "metadata_key")
-    @Column(name = "metadata_value")
+    @Column(name = "metadata_value", columnDefinition = "TEXT")
     private Map<String, String> metadata;
 
     private String type;

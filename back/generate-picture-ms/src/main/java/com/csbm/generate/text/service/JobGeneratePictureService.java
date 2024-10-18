@@ -33,7 +33,7 @@ public class JobGeneratePictureService {
     }
 
     public ImageRequestDTO generatePicture(ImageRequestDTO imageRequestDTO) {
-        String url = serverGen + "/prompt/req";
+        String url = serverGen + "/fake/prompt/req";
         System.out.println("Beginning generation ...");
         JsonNode response = restTemplate.postForObject(url, imageRequestDTO, JsonNode.class);
         System.out.println("End of generation ...");

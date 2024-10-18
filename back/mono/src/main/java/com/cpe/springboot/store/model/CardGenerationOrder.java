@@ -10,5 +10,6 @@ import lombok.Setter;
 public class CardGenerationOrder {
     private int user_id;
     private int store_id;
-    private String prompt;
+    private String promptImage;
+    private String promptDescription;
 }

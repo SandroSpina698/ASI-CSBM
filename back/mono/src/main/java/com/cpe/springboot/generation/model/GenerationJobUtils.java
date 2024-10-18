@@ -2,6 +2,7 @@ package com.cpe.springboot.generation.model;
 
 import com.cpe.springboot.jms.ActiveMQProducer;
 import com.cpe.springboot.job.model.Job;
+import com.cpe.springboot.job.model.JobStatus;
 import com.cpe.springboot.job.model.JobStep;
 
 import java.util.HashMap;
@@ -22,14 +23,15 @@ public class GenerationJobUtils {
                 .job(job)
                 .type(type)
                 .metadata(Map.of("prompt", prompt))
+                .status(JobStatus.RUNNING)
                 .runnable(() -> {
                     RequestDTO requestDTO = new RequestDTO(job.getId(), new HashMap<>(Map.of("type", type, "prompt", prompt)));
                     activeMQProducer.sendMessageToTopic(topic, requestDTO);
                 }).build();
     }
 
-    public static void askPropertiesGeneration(int job_id, String prompt, ActiveMQProducer producer){
-        RequestDTO requestDTO = new RequestDTO(job_id, new HashMap<>(Map.of("last-step", "true", "prompt", prompt)));
+    public static void askPropertiesGeneration(int job_id, String urlImage, ActiveMQProducer producer){
+        RequestDTO requestDTO = new RequestDTO(job_id, new HashMap<>(Map.of("last-step", "true", "url", urlImage)));
         producer.sendMessageToTopic("gen-props", requestDTO);
     }
 }

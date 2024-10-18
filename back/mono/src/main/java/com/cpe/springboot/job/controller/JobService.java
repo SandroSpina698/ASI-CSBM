@@ -1,9 +1,11 @@
 package com.cpe.springboot.job.controller;
 
+import com.cpe.springboot.job.model.DTO.JobDTO;
 import com.cpe.springboot.job.model.Job;
-import com.cpe.springboot.job.model.JobResultDTO;
+import com.cpe.springboot.job.model.DTO.JobResultDTO;
 import com.cpe.springboot.job.model.JobStatus;
 import com.cpe.springboot.job.model.JobStep;
+import com.cpe.springboot.job.model.JobUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,24 +19,24 @@ public class JobService {
     public final JobRepository jobRepository;
     public final JobStepRepository jobStepRepository;
 
-    public List<Job> getAllJobs() {
-        return (List<Job>) jobRepository.findAll();
+    public List<JobDTO> getAllJobs() {
+        return JobUtils.jobsToDTO(jobRepository.findAll());
     }
 
     public Job getJobById(Integer id){
         return jobRepository.findById(id).get();
     }
 
-    public List<Job> getRunningJobs(){
-        return jobRepository.findByStatus(JobStatus.RUNNING);
+    public List<JobDTO> getRunningJobs(){
+        return JobUtils.jobsToDTO(jobRepository.findByStatus(JobStatus.RUNNING));
     }
 
-    public List<Job> getFinishedJobs(){
-        return jobRepository.findByStatus(JobStatus.FINISHED);
+    public List<JobDTO> getFinishedJobs(){
+        return JobUtils.jobsToDTO(jobRepository.findByStatus(JobStatus.FINISHED));
     }
 
-    public List<Job> getFailedJobs(){
-        return jobRepository.findByStatus(JobStatus.FAILED);
+    public List<JobDTO> getFailedJobs(){
+        return JobUtils.jobsToDTO(jobRepository.findByStatus(JobStatus.FAILED));
     }
 
     public Job execJob(Job job){
@@ -43,6 +45,7 @@ public class JobService {
             step.setStatus(JobStatus.RUNNING);
             step.getRunnable().run();
         }
+
         return job;
     }
 
