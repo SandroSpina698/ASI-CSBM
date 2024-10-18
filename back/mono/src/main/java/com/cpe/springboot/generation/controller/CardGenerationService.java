@@ -11,6 +11,7 @@ import com.cpe.springboot.job.model.DTO.JobResultDTO;
 import com.cpe.springboot.job.model.JobStatus;
 import com.cpe.springboot.job.model.JobStep;
 import com.cpe.springboot.job.model.JobUtils;
+import com.cpe.springboot.sse.SseService;
 import com.cpe.springboot.store.model.CardGenerationOrder;
 import com.cpe.springboot.user.controller.UserService;
 import com.cpe.springboot.user.model.UserDTO;
@@ -31,6 +32,8 @@ public class CardGenerationService {
     private final JobService jobService;
     private final UserService userService;
     private ActiveMQProducer producer;
+    private SseService sseService;
+
     private final ObjectMapper om = new ObjectMapper();
 
     public int generate(CardGenerationOrder cardGenerationOrder) throws GenerationException {
@@ -107,6 +110,8 @@ public class CardGenerationService {
         user.addCard(card);
 
         userService.updateUser(user);
+
+        sseService.sendMessage("card-generated", user.getId());
 
         return true;
     }
