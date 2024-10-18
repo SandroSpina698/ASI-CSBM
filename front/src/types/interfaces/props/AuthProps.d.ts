@@ -1,3 +1,5 @@
 export interface AuthProps {
-    isAuth: boolean
+    isAuth: boolean,
+    userId: number,
+    username: string
 }
