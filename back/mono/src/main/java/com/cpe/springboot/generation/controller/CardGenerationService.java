@@ -1,6 +1,7 @@
 package com.cpe.springboot.generation.controller;
 
 import com.cpe.springboot.card.model.CardModel;
+import com.cpe.springboot.generation.model.GenerationException;
 import com.cpe.springboot.generation.model.GenerationJobUtils;
 import com.cpe.springboot.generation.model.ResultDTO;
 import com.cpe.springboot.jms.ActiveMQProducer;
@@ -12,9 +13,11 @@ import com.cpe.springboot.job.model.JobStep;
 import com.cpe.springboot.job.model.JobUtils;
 import com.cpe.springboot.store.model.CardGenerationOrder;
 import com.cpe.springboot.user.controller.UserService;
+import com.cpe.springboot.user.model.UserDTO;
 import com.cpe.springboot.user.model.UserModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -30,7 +33,12 @@ public class CardGenerationService {
     private ActiveMQProducer producer;
     private final ObjectMapper om = new ObjectMapper();
 
-    public int generate(CardGenerationOrder cardGenerationOrder) {
+    public int generate(CardGenerationOrder cardGenerationOrder) throws GenerationException {
+        if(userService.getUser(cardGenerationOrder.getUser_id()).isEmpty()){
+            throw new GenerationException("User not found.");
+        }
+
+
         // Create initial job with metadata
         Job job = Job.builder()
                 .metadata(new HashMap<>(Map.of("user_id", String.valueOf(cardGenerationOrder.getUser_id()), "store_id", String.valueOf(cardGenerationOrder.getStore_id()), "promptImage", cardGenerationOrder.getPromptImage(), "promptDescription", cardGenerationOrder.getPromptDescription())))

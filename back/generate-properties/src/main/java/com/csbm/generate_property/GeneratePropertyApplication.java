@@ -4,6 +4,7 @@ import com.csbm.generate_property.service.JobGeneratePropertyService;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class GeneratePropertyApplication {
 	@Bean
+	@LoadBalanced
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}

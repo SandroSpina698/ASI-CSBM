@@ -3,17 +3,10 @@ package com.csbm.generate_property.service;
 import com.csbm.generate_property.model.DTO.PropsRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.web.client.RestTemplate;
-
-import org.springframework.http.HttpHeaders;
-import tp.cpe.ImgToProperties;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -27,8 +20,7 @@ import static tp.cpe.ImgToProperties.getPropertiesFromImg;
 public class JobGeneratePropertyService {
     private final ObjectMapper om = new ObjectMapper();
 
-    @Value("${mono.server}")
-    private String monoServer;
+    private static final String GATEWAY_URL = "http://GATEWAY/";
 
     @Autowired
     private RestTemplate restTemplate;
@@ -46,8 +38,7 @@ public class JobGeneratePropertyService {
     }
 
     public PropsRequest generateProperties(PropsRequest propsRequest)  {
-        //String imgUrl = propsRequest.getMetadata().get("url");
-        String imgUrl = "http://localhost:10000/imgs/default-2.jpg";
+        String imgUrl = propsRequest.getMetadata().get("url");
 
         URL imageUrl = null;
         try {
@@ -77,7 +68,7 @@ public class JobGeneratePropertyService {
     }
 
     public void sendResponseToMono(PropsRequest propsRequest) {
-        String url = monoServer;
+        String url = GATEWAY_URL + "/api/card-generation/continue";
         Boolean response = restTemplate.postForObject(url, propsRequest, Boolean.class);
     }
 }

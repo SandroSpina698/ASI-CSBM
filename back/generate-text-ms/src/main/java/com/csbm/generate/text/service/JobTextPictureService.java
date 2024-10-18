@@ -16,8 +16,7 @@ public class JobTextPictureService {
     @Value("${generate.server}")
     private String serverGen;
 
-    @Value("${mono.server}")
-    private String monoServer;
+    private static final String GATEWAY_URL = "http://GATEWAY/";
 
     @Autowired
     private RestTemplate restTemplate;
@@ -40,14 +39,14 @@ public class JobTextPictureService {
     public TextRequestDTO generateText(TextGenerateDTO textGenerateDTO, TextRequestDTO textRequestDTO) {
         String url = serverGen + "/api/generate";
         System.out.println("Beginning generation ...");
-        JsonNode response = restTemplate.postForObject(url, textGenerateDTO, JsonNode.class);
+        JsonNode response = new RestTemplate().postForObject(url, textGenerateDTO, JsonNode.class);
         System.out.println("End of generation ...");
         textRequestDTO.getMetadata().put("description", response.get("response").asText());
         return textRequestDTO;
     }
 
     public void sendResponseToMono(TextRequestDTO textRequestDTO) {
-        String url = monoServer;
+        String url = GATEWAY_URL + "/api/card-generation/continue";
         System.out.println("Response to mono server ... (description : "+ textRequestDTO.getMetadata().get("description")+")");
         Boolean response = restTemplate.postForObject(url, textRequestDTO, Boolean.class);
     }

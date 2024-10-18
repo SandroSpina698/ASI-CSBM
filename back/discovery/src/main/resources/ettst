@@ -1,0 +1,43 @@
+eureka.client.serviceUrl.defaultZone: http://{eureka-host}:{port}/eureka/
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: mono-back
+          uri: lb://MONOBACK
+          predicates:
+            - Path=/api/**
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: false
+
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    metadata-map:
+      broker-url: tcp://localhost:61616 #
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: mono-back
+          uri: lb://MONOBACK
+          predicates:
+            - Path=/api/**

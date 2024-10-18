@@ -4,6 +4,7 @@ import com.cpe.springboot.jms.JsonMessageConverter;
 import jakarta.jms.ConnectionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.EnableJms;
 
@@ -15,6 +16,7 @@ import org.springframework.jms.core.JmsTemplate;
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "Card Market Rest Api", version = "1.0", description = "Information about the Card Market APi and how to interact with"))
 // doc here localhost:8080/swagger-ui.html
+@EnableDiscoveryClient
 public class CardMngMonolithicApplication {
 
 	@Bean

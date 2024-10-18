@@ -1,5 +1,6 @@
 package com.cpe.springboot.generation.controller;
 
+import com.cpe.springboot.generation.model.GenerationException;
 import com.cpe.springboot.generation.model.ResultDTO;
 import com.cpe.springboot.store.model.CardGenerationOrder;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ public class CardGenerationGenerationController {
     private final CardGenerationService generationService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/generate")
-    public int generate(@RequestBody CardGenerationOrder generationOrder){
+    public int generate(@RequestBody CardGenerationOrder generationOrder) throws GenerationException {
         return generationService.generate(generationOrder);
     }
 

@@ -9,6 +9,9 @@
         <option value="$PROJECT_DIR$/back/generate-picture-ms/pom.xml" />
         <option value="$PROJECT_DIR$/back/mono/pom.xml" />
         <option value="$PROJECT_DIR$/back/generate-properties/pom.xml" />
+        <option value="$PROJECT_DIR$/back/gateway-discovery/pom.xml" />
+        <option value="$PROJECT_DIR$/back/discovery/pom.xml" />
+        <option value="$PROJECT_DIR$/back/gateway/pom.xml" />
       </list>
     </option>
   </component>
