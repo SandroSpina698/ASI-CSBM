@@ -6,6 +6,7 @@ import "./Stock.css";
 import {CardTypeEnum} from "../../types/enums/CardTypeEnum.ts";
 import {useEffect, useState} from "react";
 import {getAllCardsInTheStock} from "../../services/cards/stock.ts";
+import {SSE_TOPIC} from "../../types/CommonConstants.ts";
 
 export default function Stock() {
     useEffect(() => {
@@ -17,6 +18,17 @@ export default function Stock() {
     const isAuth = useSelector(
         (state) => state.authenticationReducer.isAuth
     );
+
+    const eventSource = new EventSource(SSE_TOPIC);
+
+    eventSource.onmessage = function (event) {
+        console.log(event);
+        fetchAllCurentUserCards();
+    }
+
+    eventSource.onerror = function (event) {
+        console.error("Erreur sse");
+    }
 
     function fetchAllCurentUserCards(): void {
         getAllCardsInTheStock().then(result => setCurrentUserCards(result));
