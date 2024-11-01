@@ -1,8 +1,7 @@
-version: '3'
 services:
   asi:
-    image : docker.theoahga.cpe/asi-csbm:latest
-    ports :
+    image: theoahga/asi-csbm:1.1
+    ports:
       - "8080:8080"
       - "8081:8081"
       - "8082:8082"
@@ -10,12 +9,50 @@ services:
       - "8084:8084"
       - "8085:8085"
       - "8761:8761"
-
-  active-mq:
-    image : symptoma/activemq:5.18.3
+    networks:
+      - my-network
+  activemq:
+    image: symptoma/activemq:5.18.3
+    environment:
+      ACTIVEMQ_DISALLOW_WEBCONSOLE: "false"
+      ACTIVEMQ_USERNAME: myuser
+      ACTIVEMQ_PASSWORD: mypwd
+      ACTIVEMQ_WEBADMIN_USERNAME: myuserweb
+      ACTIVEMQ_WEBADMIN_PASSWORD: mypwd
     ports:
       - "61616:61616"
       - "61613:61613"
       - "8161:8161"
+    stdin_open: true
+    tty: true
+    networks:
+      - my-network
+
+  picture-gen:
+    image: registry.gitlab.com/js-asi2/asi2-resources/img-gene-neural-love-api:v1.1
+    container_name: img-gen-ln
     environment:
-      ACTIVEMQ_DISALLOW_WEBCONSOLE : ""
+      - external.iaimgapi.token=yourtoken
+    ports:
+      - "10000:8080"
+    restart: unless-stopped
+    networks:
+      - my-network
+
+  desc-gen:
+    image: ollama/ollama
+    container_name: ollama-local
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    networks:
+      - my-network
+
+volumes:
+  ollama:
+
+networks:
+  my-network:
+    driver: bridge
