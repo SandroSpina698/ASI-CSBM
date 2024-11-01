@@ -22,13 +22,11 @@ FROM openjdk:17.0.1-jdk-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/discovery/target/discovery.jar ./discovery.jar
-COPY --from=builder /app/gateway/target/gateway.jar ./gateway.jar
-COPY --from=builder /app/generate-picture-ms/target/generate-picture-ms.jar ./generate-picture-ms.jar
-COPY --from=builder /app/generate-properties/target/generate-properties.jar ./generate-properties.jar
-COPY --from=builder /app/generate-text-ms/target/generate-text-ms.jar ./generate-text-ms.jar
-COPY --from=builder /app/mono/target/mono.jar ./mono.jar
-
-EXPOSE 8080 8081 8082 8083 8084 8085 8761
+COPY --from=builder /app/discovery/target/discovery-0.0.1-SNAPSHOT.jar ./discovery.jar
+COPY --from=builder /app/gateway/target/gateway-0.0.1-SNAPSHOT.jar ./gateway.jar
+COPY --from=builder /app/generate-picture-ms/target/generate-picture-0.0.1-SNAPSHOT.jar ./generate-picture-ms.jar
+COPY --from=builder /app/generate-properties/target/generate-properties-0.0.1-SNAPSHOT.jar ./generate-properties.jar
+COPY --from=builder /app/generate-text-ms/target/generate-text-0.0.1-SNAPSHOT.jar ./generate-text-ms.jar
+COPY --from=builder /app/mono/target/mono-3.2.5.jar ./mono.jar
 
 CMD ["sh", "-c", "java -jar discovery.jar & java -jar gateway.jar & java -jar generate-picture-ms.jar & java -jar generate-properties.jar & java -jar generate-text-ms.jar & java -jar mono.jar"]
