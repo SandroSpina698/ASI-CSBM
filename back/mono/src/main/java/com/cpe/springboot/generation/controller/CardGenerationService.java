@@ -91,6 +91,10 @@ public class CardGenerationService {
 
         String name = null;
         String description = textStep.getMetadata().get("description");
+
+        if (description.length()>230){
+            description = description.substring(0,230);
+        }
         String family = null;
         String affinity = null;
         float energy = Float.valueOf(propGenResult.getMetadata().get("ENERGY"));
@@ -103,7 +107,8 @@ public class CardGenerationService {
         CardModel card = new CardModel(name, description, family, affinity, energy, hp, defence, attack, imgUrl, smallImg);
         UserModel user = userService.getUser(job.getMetadata().get("user_id")).get();
         if (user.getAccount() < card.getPrice()){
-            throw new RuntimeException("Card is too expensive");
+            card.setPrice(0);
+            //throw new RuntimeException("Card is too expensive");
         }
 
         user.setAccount(user.getAccount()- card.getPrice());
@@ -112,6 +117,9 @@ public class CardGenerationService {
         userService.updateUser(user);
 
         sseService.sendMessage("card-generated", user.getId());
+
+        job.setStatus(JobStatus.FINISHED);
+        jobService.updateJob(job);
 
         return true;
     }

@@ -20,7 +20,6 @@ export const generate = async (imagePrompt: string, descriptionPrompt: string, u
     };
 
 // /api/job/{id}
-
     return fetch(`http://localhost:8081/api/card-generation/generate`, {
         method: "POST",
         headers: {

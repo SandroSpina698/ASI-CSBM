@@ -87,4 +87,8 @@ public class JobService {
     public List<JobStep> saveJobSteps(List<JobStep> steps) {
         return (List<JobStep>) jobStepRepository.saveAll(steps);
     }
+
+    public Job updateJob(Job job) {
+        return jobRepository.save(job);
+    }
 }

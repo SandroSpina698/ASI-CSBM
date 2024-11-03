@@ -31,14 +31,16 @@ public class SseService {
     }
 
     public void sendMessage(String messageName, Object data) {
-        try {
-            this.emitter.send(SseEmitter.event()
-                    .name(messageName)
-                    .id("" + ++lastId)
-                    .data(data));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error send in sse emiter.");
+        if (this.emitter != null){
+            try {
+                this.emitter.send(SseEmitter.event()
+                        .name(messageName)
+                        .id("" + ++lastId)
+                        .data(data));
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error send in sse emiter.");
+            }
         }
     }
 }

@@ -4,24 +4,15 @@ import './Dashboard.css';
 import {useDispatch, useSelector} from "react-redux";
 import {useState} from "react";
 import {generate} from "../../services/images/generateImages.service.ts";
-import {SSE_TOPIC} from "../../types/CommonConstants.ts";
 import {getAllCardsInTheStock} from "../../services/cards/stock.ts";
 import {Card} from "../../types/interfaces/Card";
 import {UserCardsStates} from "../../types/enums/UserCardsStates.ts";
+import {subscribeSSE} from "./sseservice.ts";
 
 export default function Dashboard() {
     const [imagePrompt, setImagePrompt] = useState('');
     const [descriptionPrompt, setDescriptionPrompt] = useState('');
-    const eventSource = new EventSource(SSE_TOPIC);
     const dispatch = useDispatch();
-
-    eventSource.onmessage = function (event) {
-        fetchAllCurentUserCards();
-    }
-
-    eventSource.onerror = function (event) {
-        console.error("Erreur sse");
-    }
 
     const isAuth = useSelector(
         (state) => state.authenticationReducer.isAuth
@@ -32,7 +23,7 @@ export default function Dashboard() {
     )
 
     function fetchAllCurentUserCards() {
-        getAllCardsInTheStock().then(result => setCardsInStore(result));
+        getAllCardsInTheStock(userId).then(result => setCardsInStore(result));
     }
 
     function setCardsInStore(cards: Card[]) {
@@ -52,6 +43,7 @@ export default function Dashboard() {
             alert("You have to fill the mandatory inputs.");
             return;
         }
+        subscribeSSE(fetchAllCurentUserCards);
 
         generate(imagePrompt, descriptionPrompt, userId).then(r => console.log(r));
     }
