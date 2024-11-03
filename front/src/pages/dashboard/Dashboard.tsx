@@ -1,13 +1,27 @@
 import {useAuthGuard} from "../auth/AuthGuard.ts";
 import {Button, Form} from "react-bootstrap";
 import './Dashboard.css';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useState} from "react";
 import {generate} from "../../services/images/generateImages.service.ts";
+import {SSE_TOPIC} from "../../types/CommonConstants.ts";
+import {getAllCardsInTheStock} from "../../services/cards/stock.ts";
+import {Card} from "../../types/interfaces/Card";
+import {UserCardsStates} from "../../types/enums/UserCardsStates.ts";
 
 export default function Dashboard() {
     const [imagePrompt, setImagePrompt] = useState('');
     const [descriptionPrompt, setDescriptionPrompt] = useState('');
+    const eventSource = new EventSource(SSE_TOPIC);
+    const dispatch = useDispatch();
+
+    eventSource.onmessage = function (event) {
+        fetchAllCurentUserCards();
+    }
+
+    eventSource.onerror = function (event) {
+        console.error("Erreur sse");
+    }
 
     const isAuth = useSelector(
         (state) => state.authenticationReducer.isAuth
@@ -16,6 +30,17 @@ export default function Dashboard() {
     const userId = useSelector(
         (state) => state.authenticationReducer.userId
     )
+
+    function fetchAllCurentUserCards() {
+        getAllCardsInTheStock().then(result => setCardsInStore(result));
+    }
+
+    function setCardsInStore(cards: Card[]) {
+        dispatch({
+            type: UserCardsStates.UPDATE_USER_CARDS,
+            payload: cards
+        })
+    }
 
     function submit() {
         if (!imagePrompt || !imagePrompt.trim()) {
