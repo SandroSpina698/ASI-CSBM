@@ -22,7 +22,6 @@ export default function Stock() {
     const eventSource = new EventSource(SSE_TOPIC);
 
     eventSource.onmessage = function (event) {
-        console.log(event);
         fetchAllCurentUserCards();
     }
 

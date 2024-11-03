@@ -1,13 +1,12 @@
 import {BASE_URL} from "../../types/CommonConstants.ts";
 
 export const authenticate = (username: string, password: string) => {
-    console.log(password);
     let body = {
         "username": username,
         "password": password
     };
 
-    return fetch(`${BASE_URL}/auth`, {
+    return fetch(`http://localhost:8081/api/auth`, {
         headers: {
             'Content-Type': 'application/json',
         },
@@ -33,7 +32,7 @@ export const register = (username: string, password: string) => {
         "cardList": []
     }
 
-    return fetch(`${BASE_URL}/user`, {
+    return fetch(`http://localhost:8081/api/user`, {
         headers: {
             'Content-Type': 'application/json',
         },

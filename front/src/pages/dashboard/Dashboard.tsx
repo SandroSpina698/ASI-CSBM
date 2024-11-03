@@ -13,6 +13,10 @@ export default function Dashboard() {
         (state) => state.authenticationReducer.isAuth
     );
 
+    const userId = useSelector(
+        (state) => state.authenticationReducer.userId
+    )
+
     function submit() {
         if (!imagePrompt || !imagePrompt.trim()) {
             alert("You have to fill the mandatory inputs.");
@@ -24,7 +28,7 @@ export default function Dashboard() {
             return;
         }
 
-        generate(imagePrompt, descriptionPrompt).then(r => console.log(r));
+        generate(imagePrompt, descriptionPrompt, userId).then(r => console.log(r));
     }
 
     useAuthGuard(isAuth);
