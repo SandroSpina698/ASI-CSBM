@@ -2,8 +2,14 @@ import {Button, Card} from "react-bootstrap";
 import {CardsProps} from "../../types/interfaces/props/CardsProps.ts";
 import {CardTypeEnum} from "../../types/enums/CardTypeEnum.ts";
 import "./CSMBCards.css"
+import {buyACard, sellACard} from "../../services/cards/market.ts";
+import {useSelector} from "react-redux";
 
 export default function CSMBCards(props: CardsProps) {
+    const userId = useSelector(
+        (state) => state.authenticationReducer.userId
+    )
+
     function handleClick() {
         if (props.type === CardTypeEnum.MARKET) {
             return buy();
@@ -13,11 +19,15 @@ export default function CSMBCards(props: CardsProps) {
     }
 
     function sell() {
-        console.log("Sell");
+        sellACard(userId, props.card).then(response => {
+            console.log(response);
+        });
     }
 
     function buy() {
-        console.log("Buy");
+        buyACard(userId, props.card).then(response => {
+            console.log(response);
+        });
     }
 
     return (
