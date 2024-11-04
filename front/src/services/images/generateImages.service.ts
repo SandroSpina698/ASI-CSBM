@@ -11,14 +11,7 @@
 * --> return numero de job
  */
 
-import {BASE_URL} from "../../types/CommonConstants.ts";
-import {useSelector} from "react-redux";
-
-export const generate = async (imagePrompt: string, descriptionPrompt: string): Promise<number> => {
-    const userId = useSelector(
-        (state) => state.authenticationReducer.userId
-    )
-
+export const generate = async (imagePrompt: string, descriptionPrompt: string, userId: string): Promise<number> => {
     let body = {
         user_id: userId,
         store_id: 1,
@@ -26,7 +19,8 @@ export const generate = async (imagePrompt: string, descriptionPrompt: string): 
         promptDescription: descriptionPrompt
     };
 
-    return fetch(`${BASE_URL}/store/cards_to_buy`, {
+// /api/job/{id}
+    return fetch(`http://localhost:8081/api/card-generation/generate`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

@@ -1,17 +1,37 @@
 import {useAuthGuard} from "../auth/AuthGuard.ts";
 import {Button, Form} from "react-bootstrap";
 import './Dashboard.css';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useState} from "react";
 import {generate} from "../../services/images/generateImages.service.ts";
+import {getAllCardsInTheStock} from "../../services/cards/stock.ts";
+import {Card} from "../../types/interfaces/Card";
+import {UserCardsStates} from "../../types/enums/UserCardsStates.ts";
+import {subscribeSSE} from "./sseservice.ts";
 
 export default function Dashboard() {
     const [imagePrompt, setImagePrompt] = useState('');
     const [descriptionPrompt, setDescriptionPrompt] = useState('');
+    const dispatch = useDispatch();
 
     const isAuth = useSelector(
         (state) => state.authenticationReducer.isAuth
     );
+
+    const userId = useSelector(
+        (state) => state.authenticationReducer.userId
+    )
+
+    function fetchAllCurentUserCards() {
+        getAllCardsInTheStock(userId).then(result => setCardsInStore(result));
+    }
+
+    function setCardsInStore(cards: Card[]) {
+        dispatch({
+            type: UserCardsStates.UPDATE_USER_CARDS,
+            payload: cards
+        })
+    }
 
     function submit() {
         if (!imagePrompt || !imagePrompt.trim()) {
@@ -23,8 +43,9 @@ export default function Dashboard() {
             alert("You have to fill the mandatory inputs.");
             return;
         }
+        subscribeSSE(fetchAllCurentUserCards);
 
-        generate(imagePrompt, descriptionPrompt).then(r => console.log(r));
+        generate(imagePrompt, descriptionPrompt, userId).then(r => console.log(r));
     }
 
     useAuthGuard(isAuth);

@@ -32,11 +32,16 @@ public class JobGeneratePictureService {
     }
 
     public ImageRequestDTO generatePicture(ImageRequestDTO imageRequestDTO) {
-        String url = serverGen + "/prompt/req";
+        // On avais des problème de token avec neurallove
+        String url = serverGen + "/fake/prompt/req";
         System.out.println("Beginning generation ...");
         JsonNode response = new RestTemplate().postForObject(url, imageRequestDTO, JsonNode.class);
         System.out.println("End of generation ...");
-        imageRequestDTO.getMetadata().put("url",serverGen+response.get("url").asText());
+        String urlFinal = response.get("url").asText();
+        if (urlFinal.startsWith("/static")){
+            urlFinal = urlFinal.substring("/static".length());
+        }
+        imageRequestDTO.getMetadata().put("url",serverGen + urlFinal);
         return imageRequestDTO;
     }
 
