@@ -1,7 +1,5 @@
-import {AuthProps} from "../../types/interfaces/AuthProps";
 import {useAuthGuard} from "../auth/AuthGuard.ts";
 import {useSelector} from "react-redux";
-import {useEffect, useState} from "react";
 
 export default function Profile() {
     let username = '';

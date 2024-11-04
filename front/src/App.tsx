@@ -3,7 +3,6 @@ import Profile from './pages/profile/Profile.tsx';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Dashboard from "./pages/dashboard/Dashboard.tsx";
 import Auth from "./pages/auth/Auth.tsx";
-import {useSelector} from "react-redux";
 import CMSBNavbar from "./components/navbar/Navbar.tsx";
 import Stock from "./pages/stock/Stock.tsx";
 import Market from "./pages/market/Market.tsx";
