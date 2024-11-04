@@ -14,9 +14,10 @@ export default function Auth() {
     const [pwd, setpwd] = useState("");
 
     function authenticate() {
-        let vPassword = bcrypt.hashSync(pwd, Salt);
-
-        auth(username, vPassword).then((response) => {
+        auth(username, pwd).then((response) => {
+            sessionStorage.setItem("username", username);
+            sessionStorage.setItem("isConnected", "true");
+            sessionStorage.setItem("userId", response);
             dispatch({
                 type: AuthenticationStates.UPDATE_AUTHENTICATION_STATE,
                 payload: {isAuth: true, username: username, userId: response}
@@ -26,9 +27,7 @@ export default function Auth() {
     }
 
     function register() {
-        let vPassword = bcrypt.hashSync(pwd, Salt);
-
-        registerFromService(username, vPassword).then((result) => {
+        registerFromService(username, pwd).then((result) => {
             console.info(result);
         });
     }

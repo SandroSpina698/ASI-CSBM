@@ -1,5 +1,4 @@
 import {Card} from "../../types/interfaces/Card";
-import {useSelector} from "react-redux";
 import {useAuthGuard} from "../auth/AuthGuard.ts";
 import CSMBCards from "../../components/cards/CSMBCards.tsx";
 import {CardTypeEnum} from "../../types/enums/CardTypeEnum.ts";
@@ -14,9 +13,7 @@ export default function Market() {
 
     const [currentUserCards, setCurrentUserCards] = useState<Card[]>([]);
 
-    const isAuth = useSelector(
-        (state) => state.authenticationReducer.isAuth
-    );
+    const isAuth = sessionStorage.getItem("isConnected") === 'true' ? sessionStorage.getItem("isConnected") : 'false';
 
     function fetchAllUserCards(): void {
         getAllCardsInTheMarket().then(result => {

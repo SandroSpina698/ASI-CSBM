@@ -1,7 +1,7 @@
 import {useAuthGuard} from "../auth/AuthGuard.ts";
 import {Button, Form} from "react-bootstrap";
 import './Dashboard.css';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useState} from "react";
 import {generate} from "../../services/images/generateImages.service.ts";
 import {getAllCardsInTheStock} from "../../services/cards/stock.ts";
@@ -14,13 +14,9 @@ export default function Dashboard() {
     const [descriptionPrompt, setDescriptionPrompt] = useState('');
     const dispatch = useDispatch();
 
-    const isAuth = useSelector(
-        (state) => state.authenticationReducer.isAuth
-    );
+    const isAuth = sessionStorage.getItem("isConnected") === 'true' ? sessionStorage.getItem("isConnected") : 'false';
 
-    const userId = useSelector(
-        (state) => state.authenticationReducer.userId
-    )
+    const userId = sessionStorage.getItem("userId") ? sessionStorage.getItem("userId") : "";
 
     function fetchAllCurentUserCards() {
         getAllCardsInTheStock(userId).then(result => setCardsInStore(result));

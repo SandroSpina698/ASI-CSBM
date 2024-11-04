@@ -3,12 +3,9 @@ import {CardsProps} from "../../types/interfaces/props/CardsProps.ts";
 import {CardTypeEnum} from "../../types/enums/CardTypeEnum.ts";
 import "./CSMBCards.css"
 import {buyACard, sellACard} from "../../services/cards/market.ts";
-import {useSelector} from "react-redux";
 
 export default function CSMBCards(props: CardsProps) {
-    const userId = useSelector(
-        (state) => state.authenticationReducer.userId
-    )
+    const userId = sessionStorage.getItem("userId") ?sessionStorage.getItem("userId") : "None";
 
     function handleClick() {
         if (props.type === CardTypeEnum.MARKET) {
