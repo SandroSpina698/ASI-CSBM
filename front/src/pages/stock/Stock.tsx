@@ -13,9 +13,7 @@ export default function Stock() {
         (state) => state.currentUserCardsReducer
     );
 
-    const isAuth = useSelector(
-        (state) => state.authenticationReducer.isAuth
-    );
+    const isAuth = sessionStorage.getItem("isConnected") === 'true' ? sessionStorage.getItem("isConnected") : 'false';
 
     const dispatch = useDispatch();
 
@@ -25,9 +23,7 @@ export default function Stock() {
             payload: cards
         })
     }
-    const userId = useSelector(
-        (state) => state.authenticationReducer.userId
-    )
+    const userId = sessionStorage.getItem("userId") ? sessionStorage.getItem("userId") : "None";
 
     function fetchAllCurentUserCards() {
         getAllCardsInTheStock(userId).then(result => setCardsInStore(result));
