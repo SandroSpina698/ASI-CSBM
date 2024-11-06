@@ -1,3 +1,5 @@
+import {BASE_URL} from "../../types/CommonConstants.ts";
+
 export const authenticate = (username: string, password: string) => {
     let body = {
         "username": username,

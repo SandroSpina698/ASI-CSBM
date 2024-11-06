@@ -3,12 +3,27 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import {Link, NavLink, useNavigate} from "react-router-dom";
 import "./CSMBNavbar.css";
+import {useContext} from "react";
+import {SocketContext} from "../../stores/context/SocketContext.ts";
 
 function CMSBNavbar() {
     const navigate = useNavigate();
+    const socket = useContext(SocketContext).sharedSocket;
+
     function logout() {
+        let isConnected: boolean = !!sessionStorage.getItem("isConnected") && sessionStorage.getItem("isConnected")?.toLowerCase() === "true";
+
+        console.log("isConnected", isConnected);
+
+        if (!isConnected) {
+            return;
+        }
+
         sessionStorage.clear();
         sessionStorage.setItem("isConnected", "false");
+
+        socket.disconnect();
+
         navigate("/");
     }
 

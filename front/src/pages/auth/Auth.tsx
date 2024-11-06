@@ -2,16 +2,19 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from "react-router-dom";
 import {AuthenticationStates} from "../../types/enums/Authentication-states.ts";
 import {Button, Form} from "react-bootstrap";
-import {useState} from "react";
-import bcrypt from "bcryptjs-react";
+import {useContext, useState} from "react";
 import {authenticate as auth, register as registerFromService} from "../../services/user/user.service.ts"
-import {Salt} from "../../types/CommonConstants.ts"
+import {Socket} from "socket.io-client";
+import {connect, sendMessage} from "../../services/websocket/websocket.service.ts";
+import {SocketContext} from "../../stores/context/SocketContext.ts";
 
 export default function Auth() {
+    const [socket, setSocket] = useState<Socket>();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [pwd, setpwd] = useState("");
+    let sharedSocket = useContext(SocketContext);
 
     function authenticate() {
         auth(username, pwd).then((response) => {
@@ -22,6 +25,19 @@ export default function Auth() {
                 type: AuthenticationStates.UPDATE_AUTHENTICATION_STATE,
                 payload: {isAuth: true, username: username, userId: response}
             })
+
+            let tempSocket = connect(response);
+
+            setSocket(tempSocket);
+
+            sharedSocket.setSharedSocket(tempSocket);
+
+            // socket?.on("sendmessage", ({ sender_id, message }) => {
+            //     alert(`nouveau message de l'utilisateur ${sender_id}, il dit: ${message}`);
+            // })
+
+            // sendMessage(response, "testtest", tempSocket ? tempSocket : connect(response));
+
             navigate("/");
         });
     }

@@ -6,10 +6,14 @@ import Auth from "./pages/auth/Auth.tsx";
 import CMSBNavbar from "./components/navbar/Navbar.tsx";
 import Stock from "./pages/stock/Stock.tsx";
 import Market from "./pages/market/Market.tsx";
+import {SocketContext} from "./stores/context/SocketContext.ts";
+import {useState} from "react";
 
 function App() {
+    const [sharedSocket, setSharedSocket] = useState();
 
     return (
+        <SocketContext.Provider value={{sharedSocket, setSharedSocket}}>
           <BrowserRouter>
               <CMSBNavbar/>
               <div className={"application-body"}>
@@ -22,6 +26,7 @@ function App() {
                   </Routes>
               </div>
           </BrowserRouter>
+        </SocketContext.Provider>
   )
 }
 
