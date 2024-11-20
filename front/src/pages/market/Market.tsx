@@ -25,9 +25,11 @@ export default function Market() {
 
     return (
         <div className={"market-container"}>
-            {
-                currentUserCards.map(e => <CSMBCards card={e} type={CardTypeEnum.STOCK}/>)
-            }
+            {currentUserCards.length !== 0 ? (
+                currentUserCards.map(e => <CSMBCards key={e.id} card={e} type={CardTypeEnum.STOCK} />)
+            ) : (
+                <div style={{ width: "100%", textAlign: 'center'}}>Aucune carte</div>
+            )}
         </div>
     )
 }

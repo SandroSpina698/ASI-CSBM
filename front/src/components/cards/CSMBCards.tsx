@@ -30,7 +30,7 @@ export default function CSMBCards(props: CardsProps) {
     return (
         <>
             <Card style={{ width: '18rem' }}>
-                <Card.Img variant="top" src={props.card.imgUrl} />
+                <Card.Img variant="top" src={props.card.imgUrl.replace("172.17.0.1","localhost")} />
                 <Card.Body>
                     <Card.Text>
                         {props.card.description}
