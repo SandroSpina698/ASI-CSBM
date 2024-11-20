@@ -9,27 +9,26 @@ const InputMessage = () => {
   const socket = useContext(SocketContext).sharedSocket;
   const sendMessageOnline = () => {
     sendMessage("all", message, socket);
-    /*
-    socket.emit("receivemessage", {
-      recipient_id: ,
-      message: message,
-    });
-    */
     setMessage("");
   };
 
-  const handleKeyDown = (event: any) => {
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ): void => {
     if (event.key === "Enter" && message.length > 0) {
       sendMessageOnline();
     }
   };
   const messageGroupStyle: CSSProperties = {
-    position: "sticky",
+    width: "calc(100% - 15px)",
+    position: "absolute",
     bottom: "0",
+    padding: "0px",
+    margin: "0px",
     paddingBottom: "10px",
     display: "flex",
     justifyContent: "center",
-    gap: 5,
+    gap: 10,
   };
   const inputStyle: CSSProperties = {
     color: "black",
@@ -38,7 +37,7 @@ const InputMessage = () => {
     borderRadius: "5px",
     outline: "none",
     width: "80%",
-    height: "4vh",
+    height: "6vh",
     padding: "10px",
   };
 
@@ -48,7 +47,7 @@ const InputMessage = () => {
     border: "none",
     color: "white",
     width: "5vw",
-    height: "4vh",
+    height: "6vh",
     textAlign: "center",
     display: "flex",
     justifyContent: "center",

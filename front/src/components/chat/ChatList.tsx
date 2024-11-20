@@ -1,30 +1,34 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import MessageComponent from "./MessageComponent";
 import { SocketContext } from "../../stores/context/SocketContext";
 
 interface MessageProps {
   sender_id?: string;
-  message: string;
+  userMessage: string;
 }
 
 const ChatList = () => {
   const socket = useContext(SocketContext).sharedSocket;
-  const chatArray: Array<string> = [];
-  socket?.on("receivemessage", ({ sender_id, message }: MessageProps) => {
-    console.log("sender_id" + sender_id);
-    chatArray.push(message);
+  const userId = sessionStorage.getItem("userId")
+    ? sessionStorage.getItem("userId")
+    : "None";
+
+  const [chatArray, setChatArray] = useState<MessageProps[]>([]);
+
+  socket?.on("sendmessage", (message: MessageProps) => {
+    setChatArray([...chatArray, message]);
   });
 
   return (
-    <div style={{}}>
+    <div className="messageListContainer" style={{}}>
       {chatArray.map((props, index) => (
         //TODO! a changer pour que key soit unique
         <MessageComponent
           key={index}
-          content={props}
-          user_id={(index % 2).toString()}
-          isCurrentUser={index % 2 == 0}
-          timestamp={new Date(8.64e15).toString()}
+          content={props.userMessage}
+          user_id={props.sender_id ? props.sender_id.toString() : ""}
+          isCurrentUser={props.sender_id == userId}
+          timestamp={new Date().toString()}
         />
       ))}
     </div>
