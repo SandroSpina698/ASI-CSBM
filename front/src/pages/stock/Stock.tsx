@@ -7,13 +7,14 @@ import {getAllCardsInTheStock} from "../../services/cards/stock.ts";
 import {useEffect} from "react";
 import {Card} from "../../types/interfaces/Card";
 import {UserCardsStates} from "../../types/enums/UserCardsStates.ts";
+import { CardsProps } from "../../types/interfaces/props/CardsProps.ts";
 
 export default function Stock() {
     const currentCards = useSelector(
         (state) => state.currentUserCardsReducer
     );
 
-    const isAuth = sessionStorage.getItem("isConnected") === 'true' ? sessionStorage.getItem("isConnected") : 'false';
+    const isAuth = sessionStorage.getItem("isConnected") === 'true' ? "true" : 'false';
 
     const dispatch = useDispatch();
 
@@ -23,7 +24,7 @@ export default function Stock() {
             payload: cards
         })
     }
-    const userId = sessionStorage.getItem("userId") ? sessionStorage.getItem("userId") : "None";
+    const userId = sessionStorage.getItem("userId") ?? "None";
 
     function fetchAllCurentUserCards() {
         getAllCardsInTheStock(userId).then(result => setCardsInStore(result));
