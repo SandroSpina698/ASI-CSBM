@@ -1,0 +1,13 @@
+.button-join {
+    width: fit-content;
+    height: fit-content;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem;
+    background-color: #CACBCD;
+}
+
+.button-join:hover {
+    background-color: #a0a0a0;
+    transition-delay: 0.1s;
+    color: rgba(0,0,0,.8);
+}
