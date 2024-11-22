@@ -43,6 +43,8 @@ function CMSBNavbar() {
                                 isPending ? "link pending" : isActive ? "link active" : "link"}>Market</NavLink>
                             <NavLink to="profile" className={({isActive, isPending}) =>
                                 isPending ? "link pending" : isActive ? "link active" : "link"}>Profile</NavLink>
+                            <NavLink to="play" className={({isActive, isPending}) =>
+                                isPending ? "link pending" : isActive ? "link active" : "link"}>Play</NavLink>
                             <button onClick={logout}>📴</button>
                         </Nav>
                     </Navbar.Collapse>

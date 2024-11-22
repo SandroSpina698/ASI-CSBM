@@ -8,6 +8,7 @@ import Stock from "./pages/stock/Stock.tsx";
 import Market from "./pages/market/Market.tsx";
 import {SocketContext} from "./stores/context/SocketContext.ts";
 import {useState} from "react";
+import WaitingRoom from "./pages/game/WaitingRoom.tsx";
 
 function App() {
     const [sharedSocket, setSharedSocket] = useState();
@@ -23,6 +24,7 @@ function App() {
                       <Route exact path="/auth" element={<Auth/>}/>
                       <Route exact path="/stock" element={<Stock/>}/>
                       <Route exact path="/market" element={<Market/>}/>
+                      <Route path="/play" element={<WaitingRoom/>}/>
                   </Routes>
               </div>
           </BrowserRouter>
