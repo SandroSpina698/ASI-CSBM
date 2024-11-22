@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import MessageComponent from "./MessageComponent";
 import { SocketContext } from "../../stores/context/SocketContext";
 
@@ -9,45 +9,53 @@ interface MessageProps {
 
 const ChatList = () => {
   const socket = useContext(SocketContext).sharedSocket;
-  const userId = sessionStorage.getItem("userId")
-    ? sessionStorage.getItem("userId")
-    : "None";
+  const userId = sessionStorage.getItem("userId") || "None";
 
   const [chatArray, setChatArray] = useState<MessageProps[]>([]);
 
-  socket?.on("sendmessage", (message: MessageProps) => {
-    setChatArray([...chatArray, message]);
-  });
+  const messageEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    const handleMessage = (message: MessageProps) => {
+      setChatArray((prev) => [...prev, message]);
+    };
+
+    socket?.on("sendmessage", handleMessage);
+
+    return () => {
+      socket?.off("sendmessage", handleMessage);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatArray]);
 
   return (
-    <div className="messageListContainer" style={{}}>
+    <div
+      className="messageListContainer"
+      style={{
+        overflowY: "auto",
+        height: "calc(100vh - 150px)",
+        padding: "15px",
+      }}
+    >
       {chatArray.map((props, index) => (
-        //TODO! a changer pour que key soit unique
         <MessageComponent
-          key={index}
+          key={index} // Utilisez un identifiant unique si possible
           content={props.userMessage}
           user_id={props.sender_id ? props.sender_id.toString() : ""}
-          isCurrentUser={props.sender_id == userId}
+          isCurrentUser={props.sender_id === userId}
           timestamp={new Date().toString()}
         />
       ))}
+      <div ref={messageEndRef}></div>
     </div>
   );
 };
+
 export default ChatList;
-
-/*
- *   function generateRandomString() {
-    const length = Math.floor(Math.random() * (500 - 30 + 1)) + 30; // Longueur aléatoire entre 30 et 100
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
-    let randomString = "";
-
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      randomString += characters[randomIndex];
-    }
-
-    return randomString;
-  }
-*/

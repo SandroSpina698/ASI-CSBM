@@ -28,19 +28,9 @@ export default function Auth() {
         type: AuthenticationStates.UPDATE_AUTHENTICATION_STATE,
         payload: { isAuth: true, username: username, userId: response },
       });
-
       const tempSocket = connect(response);
-
       setSocket(tempSocket);
-
       sharedSocket.setSharedSocket(tempSocket);
-
-      // socket?.on("sendmessage", ({ sender_id, message }) => {
-      //     alert(`nouveau message de l'utilisateur ${sender_id}, il dit: ${message}`);
-      // })
-
-      // sendMessage(response, "testtest", tempSocket ? tempSocket : connect(response));
-
       navigate("/");
     });
   }

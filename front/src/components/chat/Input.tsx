@@ -19,17 +19,18 @@ const InputMessage = () => {
       sendMessageOnline();
     }
   };
+
   const messageGroupStyle: CSSProperties = {
-    width: "calc(100% - 15px)",
-    position: "absolute",
-    bottom: "0",
-    padding: "0px",
-    margin: "0px",
-    paddingBottom: "10px",
+    //position: "fixed",
     display: "flex",
+    //width: "100%",
     justifyContent: "center",
-    gap: 10,
+    gap: "10px",
+    padding: "10px",
+    backgroundColor: "#f5f5f5",
+    borderTop: "1px solid #ddd", // Ligne séparatrice
   };
+
   const inputStyle: CSSProperties = {
     color: "black",
     backgroundColor: "white",
@@ -43,7 +44,7 @@ const InputMessage = () => {
 
   const buttonStyle: CSSProperties = {
     borderRadius: "5px",
-    backgroundColor: message.length == 0 ? "grey" : "blueviolet",
+    backgroundColor: message.length === 0 ? "grey" : "blueviolet",
     border: "none",
     color: "white",
     width: "5vw",
@@ -52,8 +53,9 @@ const InputMessage = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    cursor: message.length == 0 ? "notAllowed" : "",
+    cursor: message.length === 0 ? "not-allowed" : "pointer",
   };
+
   return (
     <div style={messageGroupStyle}>
       <input
@@ -65,9 +67,9 @@ const InputMessage = () => {
         maxLength={500}
       />
       <motion.button
-        disabled={message.length == 0}
+        disabled={message.length === 0}
         onTap={sendMessageOnline}
-        whileTap={{ scale: message.length == 0 ? 1.0 : 0.9 }}
+        whileTap={{ scale: message.length === 0 ? 1.0 : 0.9 }}
         style={buttonStyle}
       >
         Send
