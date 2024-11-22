@@ -1,6 +1,6 @@
 services:
   asi:
-    image: theoahga/asi-csbm:1.1
+    image: theoahga/asi-csbm:1.3
     ports:
       - "8080:8080"
       - "8081:8081"
