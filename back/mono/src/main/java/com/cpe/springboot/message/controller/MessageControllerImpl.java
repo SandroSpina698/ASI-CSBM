@@ -2,7 +2,7 @@ package com.cpe.springboot.message.controller;
 
 import com.cpe.springboot.message.dto.in.MessageVM;
 import com.cpe.springboot.message.dto.out.MessageDTO;
-import com.cpe.springboot.message.service.MessageServiceImpl;
+import com.cpe.springboot.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageControllerImpl implements MessageController {
 
-    private final MessageServiceImpl messageService;
+    private final MessageService messageService;
 
     @Override
     public ResponseEntity<List<MessageDTO>> getAll() {

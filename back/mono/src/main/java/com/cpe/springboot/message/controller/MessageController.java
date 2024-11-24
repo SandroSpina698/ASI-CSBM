@@ -30,7 +30,7 @@ public interface MessageController {
     @PostMapping("/post")
     ResponseEntity<com.cpe.springboot.message.dto.out.MessageDTO> addMessage(@RequestBody com.cpe.springboot.message.dto.in.MessageDTO newMessage);
 
-    @PostMapping("/post")
+    @PostMapping("/create")
     ResponseEntity<com.cpe.springboot.message.dto.out.MessageDTO> addMessage(@RequestBody MessageVM newMessage);
 
     @PutMapping("/edit/{messageToUpdateId}")
