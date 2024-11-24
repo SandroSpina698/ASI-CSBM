@@ -1,0 +1,127 @@
+services:
+  microservice-discovery:
+    image: theoahga/microservice-discovery:1.0
+    container_name: microservice-discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - my-network
+
+  microservice-gateway:
+    image: theoahga/microservice-gateway:1.0
+    container_name: microservice-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - my-network
+
+  microservice-generate-picture:
+    image: theoahga/microservice-generate-picture-ms:1.0
+    container_name: microservice-generate-picture
+    ports:
+      - "8084:8084"
+    networks:
+      - my-network
+
+  microservice-generate-properties:
+    image: theoahga/microservice-generate-properties:1.0
+    container_name: microservice-generate-properties
+    ports:
+      - "8083:8083"
+    networks:
+      - my-network
+
+  microservice-generate-text:
+    image: theoahga/microservice-generate-text-ms:1.0
+    container_name: microservice-generate-text
+    ports:
+      - "8082:8082"
+    networks:
+      - my-network
+
+  microservice-mono-legacy:
+    image: theoahga/microservice-mono:1.0
+    container_name: microservice-mono-legacy
+    ports:
+      - "8081:8081"
+    networks:
+      - my-network
+
+  microservice-chat:
+    image: theoahga/microservice-chat:1.0
+    container_name: microservice-chat
+    ports:
+      - "4000:4000"
+    networks:
+      - my-network
+
+  microservice-game:
+    image: theoahga/microservice-game:1.0
+    container_name: microservice-game
+    ports:
+      - "4003:4003"
+    networks:
+      - my-network
+
+  microservice-websocket:
+    image: theoahga/microservice-websocket:1.0
+    container_name: microservice-websocket
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network
+
+  microservice-logging:
+    image: theoahga/microservice-logging:1.0
+    container_name: microservice-logging
+    ports:
+      - "8086:8086"
+    networks:
+      - my-network
+
+  activemq:
+    image: symptoma/activemq:5.18.3
+    container_name: activemq
+    environment:
+      ACTIVEMQ_DISALLOW_WEBCONSOLE: "false"
+      ACTIVEMQ_USERNAME: myuser
+      ACTIVEMQ_PASSWORD: mypwd
+      ACTIVEMQ_WEBADMIN_USERNAME: myuserweb
+      ACTIVEMQ_WEBADMIN_PASSWORD: mypwd
+    ports:
+      - "61616:61616"
+      - "61613:61613"
+      - "8161:8161"
+    stdin_open: true
+    tty: true
+    networks:
+      - my-network
+
+  picture-gen:
+    image: registry.gitlab.com/js-asi2/asi2-resources/img-gene-neural-love-api:v1.1
+    container_name: picture-gen
+    environment:
+      - external.iaimgapi.token=v1.349728666fa1c0a6e3dfceb901faccf73f488bb1e528d2d52694515f9525c1e7
+    ports:
+      - "10000:8080"
+    restart: unless-stopped
+    networks:
+      - my-network
+
+  desc-gen:
+    image: ollama/ollama
+    container_name: desc-gen
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    networks:
+      - my-network
+
+volumes:
+  ollama:
+
+networks:
+  my-network:
+    driver: bridge

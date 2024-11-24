@@ -13,8 +13,7 @@ export default function Market() {
 
     const [currentUserCards, setCurrentUserCards] = useState<Card[]>([]);
 
-    const isAuth = sessionStorage.getItem("isConnected") === 'true' ? sessionStorage.getItem("isConnected") : 'false';
-
+    const isAuth: string = sessionStorage.getItem("isConnected") === "true" ? "true" : "false";
     function fetchAllUserCards(): void {
         getAllCardsInTheMarket().then(result => {
             result ? console.error("resultat vide lors du fetch") : setCurrentUserCards(result);

@@ -16,15 +16,17 @@ export default function CSMBCards(props: CardsProps) {
     }
 
     function sell() {
-        sellACard(userId, props.card).then(response => {
-            console.log(response);
-        });
+        if(userId!=null)
+            sellACard(userId, props.card).then(response => {
+                console.log(response);
+            });
     }
 
     function buy() {
-        buyACard(userId, props.card).then(response => {
-            console.log(response);
-        });
+        if(userId!=null)
+            buyACard(userId, props.card).then(response => {
+                console.log(response);
+            });
     }
 
     return (
