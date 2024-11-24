@@ -7,17 +7,15 @@ import {getAllCardsInTheStock} from "../../services/cards/stock.ts";
 import {useEffect} from "react";
 import {Card} from "../../types/interfaces/Card";
 import {UserCardsStates} from "../../types/enums/UserCardsStates.ts";
-import { CardsProps } from "../../types/interfaces/props/CardsProps.ts";
 
 export default function Stock() {
     const currentCards = useSelector(
-        (state) => state.currentUserCardsReducer
+        (state: any) => state.currentUserCardsReducer
     );
 
     const isAuth = sessionStorage.getItem("isConnected") === 'true' ? "true" : 'false';
 
     const dispatch = useDispatch();
-    const userId = sessionStorage.getItem("userId") ? sessionStorage.getItem("userId") : "None";
 
     function setCardsInStore(cards: Card[]) {
         dispatch({
@@ -44,14 +42,10 @@ export default function Stock() {
     return (
         <div className={"stock-container"}>
             {currentCards.length !== 0 ? (
-                currentCards.map(e => <CSMBCards key={e.id} card={e} type={CardTypeEnum.STOCK} />)
+                currentCards.map((e: Card) => <CSMBCards key={e.id} card={e} type={CardTypeEnum.STOCK} />)
             ) : (
                 <div style={{ width: "100%", textAlign: 'center'}}>Aucune carte</div>
             )}
         </div>
     );
 }
-import {useEffect} from "react";
-import {Card} from "../../types/interfaces/Card";
-
-import {UserCardsStates} from "../../types/enums/UserCardsStates.ts";
