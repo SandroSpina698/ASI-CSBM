@@ -13,7 +13,7 @@ public interface MessageController {
     ResponseEntity<List<com.cpe.springboot.message.dto.out.MessageDTO>> getAll();
 
     @GetMapping("/conversation/{senderId}/{receiverId}")
-    ResponseEntity<List<com.cpe.springboot.message.dto.out.MessageDTO>> getAllByReceiverAndSenderId(@PathVariable int senderId, @PathVariable int receiverId);
+    ResponseEntity<List<com.cpe.springboot.message.dto.out.MessageDTO>> getAllByReceiverAndSenderId(@PathVariable("senderId") int senderId, @PathVariable("receiverId") int receiverId);
 
     @GetMapping("/sender/{senderId}")
     ResponseEntity<List<com.cpe.springboot.message.dto.out.MessageDTO>> getBySenderId(@PathVariable int senderId);
