@@ -1,6 +1,7 @@
 package com.cpe.springboot.message.controller;
 
 
+import com.cpe.springboot.message.dto.in.MessageVM;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,9 @@ public interface MessageController {
 
     @PostMapping("/post")
     ResponseEntity<com.cpe.springboot.message.dto.out.MessageDTO> addMessage(@RequestBody com.cpe.springboot.message.dto.in.MessageDTO newMessage);
+
+    @PostMapping("/post")
+    ResponseEntity<com.cpe.springboot.message.dto.out.MessageDTO> addMessage(@RequestBody MessageVM newMessage);
 
     @PutMapping("/edit/{messageToUpdateId}")
     ResponseEntity<com.cpe.springboot.message.dto.out.MessageDTO> editMessage(@PathVariable int messageToUpdateId, @RequestBody String newMessage);
