@@ -3,13 +3,13 @@
 set -e
 
 IMAGE_LIST=(
-  "microservice-discovery:1.0,./back/discovery"
-  "microservice-gateway:1.0,./back/gateway"
-  "microservice-generate-picture-ms:1.0,./back/generate-picture-ms"
-  "microservice-generate-properties:1.0,./back/generate-properties"
-  "microservice-generate-text-ms:1.0,./back/generate-text-ms"
-  "microservice-mono:1.0,./back/mono"
-  "microservice-front:1.0,./front"
+  "theoahga/microservice-discovery:1.0,./back/discovery"
+  "theoahga/microservice-gateway:1.0,./back/gateway"
+  "theoahga/microservice-generate-picture-ms:1.0,./back/generate-picture-ms"
+  "theoahga/microservice-generate-properties:1.0,./back/generate-properties"
+  "theoahga/microservice-generate-text-ms:1.0,./back/generate-text-ms"
+  "theoahga/microservice-mono:1.0,./back/mono"
+  "theoahga/microservice-front:1.0,./front"
 )
 
 for ITEM in "${IMAGE_LIST[@]}"; do

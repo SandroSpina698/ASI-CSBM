@@ -29,7 +29,7 @@ export default function Auth() {
         payload: { isAuth: true, username: username, userId: response },
       });
       const tempSocket = connect(response);
-      setSocket(tempSocket);
+      setSocket(tempSocket);console.log(socket)
       sharedSocket.setSharedSocket(tempSocket);
       navigate("/");
     });

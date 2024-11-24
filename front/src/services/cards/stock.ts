@@ -9,7 +9,7 @@ export const getAllCardsInTheStock = (user_id: string): Promise<Card[]> => {
                 throw new Error('Network response was not ok');
             }
             return response.json();
-        }).then(cards =>
-            cards.filter((card: any)=> card.userId === user_id)
-        );
+        }).then(cards =>{
+            return cards.filter((card: any) => card.userId === parseInt(user_id));
+        });
 };
