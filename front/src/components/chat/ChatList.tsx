@@ -1,18 +1,19 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import MessageComponent from "./MessageComponent";
 import { SocketContext } from "../../stores/context/SocketContext";
+import webSocketService from "../../services/websocket/websocket.service";
 
 interface MessageProps {
   sender_id?: string;
-  userMessage: string;
+  receiver_id?: string;
+  content: string;
+  creationDate: string;
 }
 
 const ChatList = () => {
   const socket = useContext(SocketContext).sharedSocket;
   const userId = sessionStorage.getItem("userId") || "None";
-
-  const [chatArray, setChatArray] = useState<MessageProps[]>([]);
-
+  const [messages, setMessages] = useState<MessageProps[]>([]);
   const messageEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -21,19 +22,25 @@ const ChatList = () => {
 
   useEffect(() => {
     const handleMessage = (message: MessageProps) => {
-      setChatArray((prev) => [...prev, message]);
+      setMessages((prev) => [...prev, message]);
     };
 
-    socket?.on("sendmessage", handleMessage);
+    if (socket) {
+      // Écoute des messages sur le canal "message"
+      webSocketService.onMessage(handleMessage);
+    }
 
     return () => {
-      socket?.off("sendmessage", handleMessage);
+      if (socket) {
+        // Nettoyage du listener à la démonture du composant
+        socket.off("message", handleMessage);
+      }
     };
   }, [socket]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatArray]);
+  }, [messages]);
 
   return (
     <div
@@ -44,16 +51,16 @@ const ChatList = () => {
         padding: "15px",
       }}
     >
-      {chatArray.map((props, index) => (
+      {messages.map((message, index) => (
         <MessageComponent
-          key={index} // Utilisez un identifiant unique si possible
-          content={props.userMessage}
-          user_id={props.sender_id ? props.sender_id.toString() : ""}
-          isCurrentUser={props.sender_id === userId}
-          timestamp={new Date().toString()}
+          key={`${message.sender_id}-${index}`}
+          content={message.content}
+          user_id={message.sender_id || ""}
+          isCurrentUser={message.sender_id === userId}
+          timestamp={message.creationDate}
         />
       ))}
-      <div ref={messageEndRef}></div>
+      <div ref={messageEndRef} />
     </div>
   );
 };

@@ -4,43 +4,55 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./CSMBNavbar.css";
 import { useContext } from "react";
-import { SocketContext } from "../../stores/context/SocketContext.ts";
+import { SocketContext } from "../../stores/context/SocketContext";
+import webSocketService from "../../services/websocket/websocket.service";
+import { useDispatch } from "react-redux";
+import { AuthenticationStates } from "../../types/enums/Authentication-states";
 
 function CMSBNavbar() {
   const navigate = useNavigate();
-  const socket = useContext(SocketContext).sharedSocket;
+  const dispatch = useDispatch();
+  const socketContext = useContext(SocketContext);
 
   function logout() {
-    const isConnected: boolean =
-      !!sessionStorage.getItem("isConnected") &&
-      sessionStorage.getItem("isConnected")?.toLowerCase() === "true";
-
-    console.log("isConnected", isConnected);
+    const isConnected = sessionStorage.getItem("isConnected") === "true";
 
     if (!isConnected) {
       return;
     }
 
+    // Nettoyage du sessionStorage
     sessionStorage.clear();
     sessionStorage.setItem("isConnected", "false");
 
-    socket.disconnect();
+    // Déconnexion du WebSocket
+    webSocketService.disconnect();
 
-    navigate("/");
+    // Réinitialisation du context socket
+    socketContext.setSharedSocket(null);
+
+    // Mise à jour du state Redux
+    dispatch({
+      type: AuthenticationStates.UPDATE_AUTHENTICATION_STATE,
+      payload: { isAuth: false, username: "", userId: "" },
+    });
+
+    // Redirection
+    navigate("/auth");
   }
 
   return (
-    <div className={"navbar-container"}>
+    <div className="navbar-container">
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container>
-          <Link to="/" className={"brand"}>
+          <Link to="/" className="brand">
             CMSB
           </Link>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <NavLink
-                to={"/"}
+                to="/"
                 className={({ isActive, isPending }) =>
                   isPending ? "link pending" : isActive ? "link active" : "link"
                 }
@@ -71,7 +83,6 @@ function CMSBNavbar() {
               >
                 Profile
               </NavLink>
-
               <NavLink
                 to="chat"
                 className={({ isActive, isPending }) =>
@@ -80,7 +91,9 @@ function CMSBNavbar() {
               >
                 Chat
               </NavLink>
-              <button onClick={logout}>📴</button>
+              <button onClick={logout} className="logout-button" title="Logout">
+                📴
+              </button>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -90,4 +103,3 @@ function CMSBNavbar() {
 }
 
 export default CMSBNavbar;
-
