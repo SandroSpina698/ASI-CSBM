@@ -1,12 +1,13 @@
 import {BASE_URL, SERVER_GAME_URL} from "../../types/CommonConstants.ts";
 import {Card} from "../../types/interfaces/Card";
 
-export const joinQueue = async (userId : number) => {
+export const joinQueue = (userId : string): Promise<void | string> => {
+    console.log(userId);
     let body = {
-        id : userId
+        userId : userId
     }
 
-    return fetch(`${SERVER_GAME_URL}matchmaking/join`, {
+    return fetch(`${SERVER_GAME_URL}/games/join`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -18,20 +19,20 @@ export const joinQueue = async (userId : number) => {
             throw new Error('Network response was not ok');
         }
         return response.json();
-    })
+    }).then(message =>{
+            return message;
+    });
 }
 
-export const getAllCardsFromUser = (user_id: string): Promise<void | Card[]> => {
-    console.log("Getting card from user_id: "+user_id);
+export const getAllCardsFromUser = (user_id: string): Promise<Card[]> => {
+    console.log("userid : " +user_id)
     return fetch(`${BASE_URL}/cards`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            console.log(response);
             return response.json();
-        }).then(cards => {
-                cards.filter((card: any) => card.userId === user_id)
-            }
-        );
-}
+        }).then(cards =>{
+            return cards.filter((card: any) => card.userId === parseInt(user_id));
+        });
+};

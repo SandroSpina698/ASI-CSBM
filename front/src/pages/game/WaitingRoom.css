@@ -1,13 +1,10 @@
-.button-join {
-    width: fit-content;
-    height: fit-content;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 1rem;
-    background-color: #CACBCD;
+.invisible{
+    display:none;
 }
 
-.button-join:hover {
-    background-color: #a0a0a0;
-    transition-delay: 0.1s;
-    color: rgba(0,0,0,.8);
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    justify-content: center;
 }
