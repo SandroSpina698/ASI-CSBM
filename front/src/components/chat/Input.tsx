@@ -2,23 +2,28 @@ import { CSSProperties, useState } from "react";
 import { motion } from "motion/react";
 import webSocketService from "../../services/websocket/websocket.service";
 
-const InputMessage = () => {
+interface InputMessageProps {
+  activeTab?: string; // 'public' ou l'ID de l'utilisateur pour les chats privés
+}
+
+const InputMessage = ({ activeTab = 'public' }: InputMessageProps) => {
   const [message, setMessage] = useState<string>("");
   const [isSending, setIsSending] = useState(false);
+  const userId = sessionStorage.getItem("userId");
 
   const sendMessageOnline = async () => {
-    if (message.trim().length === 0 || isSending) return;
-
-    const userId = sessionStorage.getItem("userId");
-    if (!userId) {
-      console.error("No user ID found");
-      return;
-    }
+    if (message.trim().length === 0 || isSending || !userId) return;
 
     try {
       setIsSending(true);
-      // Puisque c'est un chat public, on utilise broadcastMessage
-      await webSocketService.sendBroadcastMessage(message);
+      
+      if (activeTab === 'public') {
+        await webSocketService.sendBroadcastMessage(message);
+      } else {
+        // Pour les messages privés, on a besoin du recipientId et du senderId
+        await webSocketService.sendPrivateMessage(activeTab, userId, message);
+      }
+
       setMessage("");
     } catch (error) {
       console.error("Erreur lors de l'envoi du message:", error);
@@ -27,9 +32,7 @@ const InputMessage = () => {
     }
   };
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ): void => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === "Enter" && message.length > 0 && !isSending) {
       sendMessageOnline();
     }
@@ -79,7 +82,11 @@ const InputMessage = () => {
         onKeyDown={handleKeyDown}
         maxLength={500}
         disabled={isSending}
-        placeholder="Écrivez votre message..."
+        placeholder={
+          activeTab === "public"
+            ? "Message public..."
+            : `Message à ${activeTab}...`
+        }
       />
       <motion.button
         disabled={message.length === 0 || isSending}
