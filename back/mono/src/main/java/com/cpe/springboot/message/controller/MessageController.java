@@ -1,6 +1,7 @@
 package com.cpe.springboot.message.controller;
 
 
+import com.cpe.springboot.message.dto.in.MessageVM;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,7 @@ public interface MessageController {
     ResponseEntity<List<com.cpe.springboot.message.dto.out.MessageDTO>> getAll();
 
     @GetMapping("/conversation/{senderId}/{receiverId}")
-    ResponseEntity<List<com.cpe.springboot.message.dto.out.MessageDTO>> getAllByReceiverAndSenderId(@PathVariable int senderId, @PathVariable int receiverId);
+    ResponseEntity<List<com.cpe.springboot.message.dto.out.MessageDTO>> getAllByReceiverAndSenderId(@PathVariable("senderId") int senderId, @PathVariable("receiverId") int receiverId);
 
     @GetMapping("/sender/{senderId}")
     ResponseEntity<List<com.cpe.springboot.message.dto.out.MessageDTO>> getBySenderId(@PathVariable int senderId);
@@ -28,6 +29,9 @@ public interface MessageController {
 
     @PostMapping("/post")
     ResponseEntity<com.cpe.springboot.message.dto.out.MessageDTO> addMessage(@RequestBody com.cpe.springboot.message.dto.in.MessageDTO newMessage);
+
+    @PostMapping("/create")
+    ResponseEntity<com.cpe.springboot.message.dto.out.MessageDTO> addMessage(@RequestBody MessageVM newMessage);
 
     @PutMapping("/edit/{messageToUpdateId}")
     ResponseEntity<com.cpe.springboot.message.dto.out.MessageDTO> editMessage(@PathVariable int messageToUpdateId, @RequestBody String newMessage);
