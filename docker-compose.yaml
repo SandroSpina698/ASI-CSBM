@@ -47,6 +47,14 @@ services:
     networks:
       - my-network
 
+  microservice-front:
+    image: theoahga/microservice-front:1.0
+    container_name: microservice-front
+    ports:
+      - "5175:5175"
+    networks:
+      - my-network
+
   microservice-chat:
     image: theoahga/microservice-chat:1.0
     container_name: microservice-chat
