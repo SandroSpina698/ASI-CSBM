@@ -1,7 +1,7 @@
 import {useAuthGuard} from "../auth/AuthGuard.ts";
 import {Button, Form} from "react-bootstrap";
 import './Dashboard.css';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useState} from "react";
 import {generate} from "../../services/images/generateImages.service.ts";
 import {getAllCardsInTheStock} from "../../services/cards/stock.ts";
@@ -14,16 +14,19 @@ export default function Dashboard() {
     const [descriptionPrompt, setDescriptionPrompt] = useState('');
     const dispatch = useDispatch();
 
-    const isAuth = useSelector(
-        (state) => state.authenticationReducer.isAuth
-    );
+    const isAuth: string = sessionStorage.getItem("isConnected") === "true" ? "true" : "false";
 
-    const userId = useSelector(
-        (state) => state.authenticationReducer.userId
-    )
+    const userId = sessionStorage.getItem("userId") ? sessionStorage.getItem("userId") : "";
 
     function fetchAllCurentUserCards() {
-        getAllCardsInTheStock(userId).then(result => setCardsInStore(result));
+        if (!userId) {
+            console.warn("User ID is null or undefined. Cannot fetch cards.");
+            return;
+        }
+        getAllCardsInTheStock(userId).then(result => setCardsInStore(result)).catch(error => {
+            console.error("Failed to fetch cards:", error);
+        });
+        
     }
 
     function setCardsInStore(cards: Card[]) {
@@ -44,8 +47,14 @@ export default function Dashboard() {
             return;
         }
         subscribeSSE(fetchAllCurentUserCards);
-
-        generate(imagePrompt, descriptionPrompt, userId).then(r => console.log(r));
+        if (!userId) {
+            console.warn("User ID is null or undefined. Cannot fetch cards.");
+            return;
+        }
+        generate(imagePrompt, descriptionPrompt, userId).then(r => console.log(r)).catch(error => {
+            console.error("Failed to generate image:", error);
+        });
+;
     }
 
     useAuthGuard(isAuth);

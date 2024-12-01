@@ -1,0 +1,83 @@
+name: Build Multiple Docker Images
+
+on:
+  push:
+    branches:
+      - atelier2
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      # Build and push microservice-discovery image
+      - name: Build microservice-discovery image
+        run: |
+          docker build -t theoahga/microservice-discovery:1.0 ./back/discovery
+
+      - name: Push microservice-discovery image
+        run: |
+          docker push theoahga/microservice-discovery:1.0
+
+      # Build and push microservice-gateway image
+      - name: Build microservice-gateway image
+        run: |
+          docker build -t theoahga/microservice-gateway:1.0 ./back/gateway
+
+      - name: Push microservice-gateway image
+        run: |
+          docker push theoahga/microservice-gateway:1.0
+
+      # Build and push microservice-generate-picture-ms image
+      - name: Build microservice-generate-picture-ms image
+        run: |
+          docker build -t theoahga/microservice-generate-picture-ms:1.0 ./back/generate-picture-ms
+
+      - name: Push microservice-generate-picture-ms image
+        run: |
+          docker push theoahga/microservice-generate-picture-ms:1.0
+
+      # Build and push microservice-generate-properties image
+      - name: Build microservice-generate-properties image
+        run: |
+          docker build -t theoahga/microservice-generate-properties:1.0 ./back/generate-properties
+
+      - name: Push microservice-generate-properties image
+        run: |
+          docker push theoahga/microservice-generate-properties:1.0
+
+      # Build and push microservice-generate-text-ms image
+      - name: Build microservice-generate-text-ms image
+        run: |
+          docker build -t theoahga/microservice-generate-text-ms:1.0 ./back/generate-text-ms
+
+      - name: Push microservice-generate-text-ms image
+        run: |
+          docker push theoahga/microservice-generate-text-ms:1.0
+
+      # Build and push microservice-mono image
+      - name: Build microservice-mono image
+        run: |
+          docker build -t theoahga/microservice-mono:1.0 ./back/mono
+
+      - name: Push microservice-mono image
+        run: |
+          docker push theoahga/microservice-mono:1.0
+
+      # Build and push microservice-front image
+      - name: Build microservice-front image
+        run: |
+          docker build -t theoahga/microservice-front:1.0 ./front
+
+      - name: Push microservice-front image
+        run: |
+          docker push theoahga/microservice-front:1.0

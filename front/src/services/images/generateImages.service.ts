@@ -11,6 +11,8 @@
 * --> return numero de job
  */
 
+import {BASE_URL} from "../../types/CommonConstants.ts";
+
 export const generate = async (imagePrompt: string, descriptionPrompt: string, userId: string): Promise<number> => {
     let body = {
         user_id: userId,
@@ -20,7 +22,7 @@ export const generate = async (imagePrompt: string, descriptionPrompt: string, u
     };
 
 // /api/job/{id}
-    return fetch(`http://localhost:8081/api/card-generation/generate`, {
+    return fetch(`${BASE_URL}/card-generation/generate`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

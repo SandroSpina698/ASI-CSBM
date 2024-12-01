@@ -1,24 +1,15 @@
-import {AuthProps} from "../../types/interfaces/AuthProps";
 import {useAuthGuard} from "../auth/AuthGuard.ts";
-import {useSelector} from "react-redux";
-import {useEffect, useState} from "react";
 
 export default function Profile() {
     let username = '';
     let userId = -1;
-    let isAuth = false;
+    let isAuth = 'false';
 
-    isAuth = useSelector(
-        (state) => state.authenticationReducer.isAuth
-    )
+    isAuth = sessionStorage.getItem("isConnected") === "true" ? "true" : "false";
 
-    username = useSelector(
-        (state) => state.authenticationReducer.username
-    )
+    username = sessionStorage.getItem("username") ?? "";
 
-    userId = useSelector(
-        (state) => state.authenticationReducer.userId
-    )
+    userId = sessionStorage.getItem("userId") ? Number.parseInt(sessionStorage.getItem("userId")!) : -1;
 
     useAuthGuard(isAuth);
 

@@ -6,7 +6,7 @@ export const authenticate = (username: string, password: string) => {
         "password": password
     };
 
-    return fetch(`http://localhost:8081/api/auth`, {
+    return fetch(`${BASE_URL}/auth`, {
         headers: {
             'Content-Type': 'application/json',
         },
@@ -32,7 +32,7 @@ export const register = (username: string, password: string) => {
         "cardList": []
     }
 
-    return fetch(`http://localhost:8081/api/user`, {
+    return fetch(`${BASE_URL}/user`, {
         headers: {
             'Content-Type': 'application/json',
         },

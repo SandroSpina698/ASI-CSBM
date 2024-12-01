@@ -1,5 +1,4 @@
 import {Card} from "../../types/interfaces/Card";
-import {useSelector} from "react-redux";
 import {useAuthGuard} from "../auth/AuthGuard.ts";
 import CSMBCards from "../../components/cards/CSMBCards.tsx";
 import {CardTypeEnum} from "../../types/enums/CardTypeEnum.ts";
@@ -14,10 +13,7 @@ export default function Market() {
 
     const [currentUserCards, setCurrentUserCards] = useState<Card[]>([]);
 
-    const isAuth = useSelector(
-        (state) => state.authenticationReducer.isAuth
-    );
-
+    const isAuth: string = sessionStorage.getItem("isConnected") === "true" ? "true" : "false";
     function fetchAllUserCards(): void {
         getAllCardsInTheMarket().then(result => {
             result ? console.error("resultat vide lors du fetch") : setCurrentUserCards(result);
@@ -28,9 +24,11 @@ export default function Market() {
 
     return (
         <div className={"market-container"}>
-            {
-                currentUserCards.map(e => <CSMBCards card={e} type={CardTypeEnum.STOCK}/>)
-            }
+            {currentUserCards.length !== 0 ? (
+                currentUserCards.map(e => <CSMBCards key={e.id} card={e} type={CardTypeEnum.STOCK} />)
+            ) : (
+                <div style={{ width: "100%", textAlign: 'center'}}>Aucune carte</div>
+            )}
         </div>
     )
 }

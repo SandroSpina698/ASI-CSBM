@@ -10,12 +10,10 @@ import {UserCardsStates} from "../../types/enums/UserCardsStates.ts";
 
 export default function Stock() {
     const currentCards = useSelector(
-        (state) => state.currentUserCardsReducer
+        (state: any) => state.currentUserCardsReducer
     );
 
-    const isAuth = useSelector(
-        (state) => state.authenticationReducer.isAuth
-    );
+    const isAuth = sessionStorage.getItem("isConnected") === 'true' ? "true" : 'false';
 
     const dispatch = useDispatch();
 
@@ -25,12 +23,14 @@ export default function Stock() {
             payload: cards
         })
     }
-    const userId = useSelector(
-        (state) => state.authenticationReducer.userId
-    )
+    const userId = sessionStorage.getItem("userId") ?? "None";
 
     function fetchAllCurentUserCards() {
-        getAllCardsInTheStock(userId).then(result => setCardsInStore(result));
+        getAllCardsInTheStock(userId).then(result =>{
+            console.log(result)
+            setCardsInStore(result)
+        });
+
     }
 
     useEffect(() => {
@@ -41,9 +41,11 @@ export default function Stock() {
 
     return (
         <div className={"stock-container"}>
-            {
-                currentCards.map(e => <CSMBCards card={e} type={CardTypeEnum.STOCK}/>)
-            }
+            {currentCards.length !== 0 ? (
+                currentCards.map((e: Card) => <CSMBCards key={e.id} card={e} type={CardTypeEnum.STOCK} />)
+            ) : (
+                <div style={{ width: "100%", textAlign: 'center'}}>Aucune carte</div>
+            )}
         </div>
-    )
+    );
 }
