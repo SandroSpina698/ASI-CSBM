@@ -9,7 +9,7 @@ const ChatDashBoard = () => {
         <div style={{ flex: 1, overflowY: "auto" }}>
           <ChatList />
         </div>
-        <InputMessage />
+        {/* <InputMessage /> */}
       </div>
     </div>
   );

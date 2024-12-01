@@ -96,7 +96,7 @@ class WebSocketService {
 
   async getConnectedUsers(): Promise<string[]> {
     try {
-      const response = await fetch(`${WEBSOCKET_SERVER_URL}/api/users`);
+      const response = await fetch(`${WEBSOCKET_SERVER_URL}/api/users/`);
       
       if (!response.ok) {
         throw new Error("Failed to get connected users");

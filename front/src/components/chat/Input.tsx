@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import webSocketService from "../../services/websocket/websocket.service";
 
 interface InputMessageProps {
-  activeTab?: string; // 'public' ou l'ID de l'utilisateur pour les chats privés
+  activeTab?: string; 
 }
 
 const InputMessage = ({ activeTab = 'public' }: InputMessageProps) => {
@@ -20,7 +20,6 @@ const InputMessage = ({ activeTab = 'public' }: InputMessageProps) => {
       if (activeTab === 'public') {
         await webSocketService.sendBroadcastMessage(message);
       } else {
-        // Pour les messages privés, on a besoin du recipientId et du senderId
         await webSocketService.sendPrivateMessage(activeTab, userId, message);
       }
 

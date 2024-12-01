@@ -29,67 +29,56 @@ const ChatList = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Gestion des utilisateurs connectés
-  useEffect(() => {
-    const loadConnectedUsers = async () => {
-      try {
-        const users = await webSocketService.getConnectedUsers();
-        setConnectedUsers(users.filter(id => id !== userId));
-      } catch (error) {
-        console.error("Error loading connected users:", error);
-      }
-    };
-
-    loadConnectedUsers();
-
-    socket?.on("userConnected", (newUserId: string) => {
-      if (newUserId !== userId) {
-        setConnectedUsers(prev => [...prev, newUserId]);
-      }
-    });
-
-    socket?.on("userDisconnected", (disconnectedUserId: string) => {
-      setConnectedUsers(prev => prev.filter(id => id !== disconnectedUserId));
-    });
-
-    return () => {
-      socket?.off("userConnected");
-      socket?.off("userDisconnected");
-    };
-  }, [socket, userId]);
-
-  // Gestion des messages
   useEffect(() => {
     if (!socket) return;
 
-    const handlePublicMessage = (message: MessageProps) => {
+    const handleMessage = (message: MessageProps) => {
       setPublicMessages(prev => [...prev, message]);
       scrollToBottom();
     };
 
     const handlePrivateMessage = (message: MessageProps) => {
       const senderId = message.sender_id;
+      if (!senderId) return;
+
       setPrivateConversations(prev => {
         const conversation = prev.find(c => c.userId === senderId);
         if (!conversation) {
-          return [...prev, { userId: senderId!, messages: [message] }];
+          return [...prev, { userId: senderId, messages: [message] }];
         }
-        const newConversations = [...prev];
-        const index = newConversations.findIndex(c => c.userId === senderId);
-        newConversations[index].messages.push(message);
-        return newConversations;
+        return prev.map(conv => 
+          conv.userId === senderId 
+            ? { ...conv, messages: [...conv.messages, message] }
+            : conv
+        );
       });
       scrollToBottom();
     };
 
-    socket.on("message", handlePublicMessage);
+    webSocketService.onMessage(handleMessage);
     socket.on(userId, handlePrivateMessage);
 
     return () => {
-      socket.off("message", handlePublicMessage);
       socket.off(userId, handlePrivateMessage);
     };
   }, [socket, userId]);
+
+  useEffect(() => {
+    const fetchConnectedUsers = async () => {
+      try {
+        const users = await webSocketService.getConnectedUsers();
+        setConnectedUsers(users.filter(id => id !== userId));
+      } catch (error) {
+        console.error("Failed to fetch connected users:", error);
+      }
+    };
+
+    fetchConnectedUsers();
+
+    const interval = setInterval(fetchConnectedUsers, 10000); // Rafraîchir la liste toutes les 10 secondes
+
+    return () => clearInterval(interval);
+  }, [userId]);
 
   const startPrivateChat = async (targetUserId: string) => {
     if (!privateConversations.find(conv => conv.userId === targetUserId)) {
@@ -97,7 +86,7 @@ const ChatList = () => {
         const history = await webSocketService.getMessageHistory(userId, targetUserId);
         setPrivateConversations(prev => [...prev, { userId: targetUserId, messages: history }]);
       } catch (error) {
-        console.error("Error loading message history:", error);
+        console.error("Failed to load message history:", error);
         setPrivateConversations(prev => [...prev, { userId: targetUserId, messages: [] }]);
       }
     }
@@ -106,8 +95,8 @@ const ChatList = () => {
 
   return (
     <div style={{ display: 'flex', height: 'calc(100vh - 100px)' }}>
-      <div style={{ width: '200px', borderRight: '1px solid #ddd', padding: '10px', overflowY: 'auto' }}>
-        <h5>Utilisateurs connectés</h5>
+      <div style={{ width: '200px', borderRight: '1px solid #ddd', padding: '10px' }}>
+        <h5>Utilisateurs connectés ({connectedUsers.length})</h5>
         {connectedUsers.map(user => (
           <div
             key={user}
@@ -133,7 +122,7 @@ const ChatList = () => {
           className="mb-3"
         >
           <Tab eventKey="public" title="Chat Public">
-            <div style={{ flex: 1, overflowY: 'auto', padding: '10px' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '10px', height: 'calc(100vh - 250px)' }}>
               {publicMessages.map((msg, idx) => (
                 <MessageComponent
                   key={`public-${idx}`}
@@ -153,10 +142,10 @@ const ChatList = () => {
               eventKey={conv.userId}
               title={`Chat avec ${conv.userId}`}
             >
-              <div style={{ flex: 1, overflowY: 'auto', padding: '10px' }}>
+              <div style={{ flex: 1, overflowY: 'auto', padding: '10px', height: 'calc(100vh - 250px)' }}>
                 {conv.messages.map((msg, idx) => (
                   <MessageComponent
-                    key={`private-${idx}`}
+                    key={`private-${conv.userId}-${idx}`}
                     content={msg.content}
                     user_id={msg.sender_id || ""}
                     isCurrentUser={msg.sender_id === userId}
@@ -170,7 +159,7 @@ const ChatList = () => {
         </Tabs>
         
         <InputMessage activeTab={activeTab} />
-        </div>
+      </div>
     </div>
   );
 };
