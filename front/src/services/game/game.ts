@@ -45,7 +45,6 @@ export const startCombat = (game_id : string, type : PlayerActionType, user_id :
             throw new Error('Network response was not ok');
         }
         console.log(response.json());
-        return response.json();
     })
 }
 

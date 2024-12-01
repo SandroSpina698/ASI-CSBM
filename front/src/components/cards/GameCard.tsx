@@ -23,7 +23,7 @@ export default function GameCard(props: GameCardProps) {
 
     return (
         <>
-            <Card style={{ width: '18rem' }}>
+            <Card id={props.card.id} style={{ width: '18rem' }}>
                 <Card.Img variant="top" src={props.card.imgUrl.replace("172.17.0.1","localhost")} />
                 <Card.Body>
                     <Card.Text>

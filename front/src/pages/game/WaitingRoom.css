@@ -8,3 +8,11 @@
     padding: 1rem;
     justify-content: center;
 }
+
+.grey {
+    background-color:gray;
+}
+
+.normal {
+    background-color:white;
+}

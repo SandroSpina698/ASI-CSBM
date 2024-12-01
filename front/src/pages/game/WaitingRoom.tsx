@@ -8,14 +8,21 @@ import {getAllCardsFromUser, joinQueue, startCombat} from "../../services/game/g
 import GameCard from "../../components/cards/GameCard.tsx";
 import {Button} from "react-bootstrap";
 import {registerWebSocket} from "../../services/game/socket-game.ts";
-import {addLabelToElementById, disableElementById, enableElementById} from "../../services/dom/dom-manipulator.ts";
+import {
+    addClassToElementById,
+    addLabelToElementById,
+    disableElementById,
+    enableElementById, removeClassToElementById
+} from "../../services/dom/dom-manipulator.ts";
 import {useEffect, useState} from "react";
 import PlayerActionType from "../../model/action/PlayerActionType.ts";
+import {useNavigate} from "react-router-dom";
 
 let gameId = "";
 
 export default function WaitingRoom(){
 
+    const navigate = useNavigate();
     const userId = sessionStorage.getItem("userId") ? sessionStorage.getItem("userId") : "None";
     const isAuth : string = sessionStorage.getItem("isConnected") === 'true' ? 'true' : 'false';
     const dispatch = useDispatch();
@@ -87,15 +94,20 @@ export default function WaitingRoom(){
     function handleCombat() {
         console.log(gameId);
         startCombat(gameId,PlayerActionType.CARDS_CHOICE, userId, cardToPlay);
+        addLabelToElementById("stateGame", "Combat is starting waiting for redirect !");
+        //navigate("/combat");
     }
 
     function handleCardSelect(card_id : number) {
         setCardToPlay((prev) => {
             if (!prev.includes(card_id)) {
                 console.log(`Adding card ID: ${card_id}`);
+                addClassToElementById(card_id,"grey")
                 return [...prev, card_id];
             } else {
                 console.log(`Card ID ${card_id} is already selected`);
+                removeClassToElementById(card_id,"grey")
+                removeClassToElementById(card_id,"normal")
                 return prev.filter(id => id !== card_id);
             }
         });
