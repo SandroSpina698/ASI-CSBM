@@ -10,14 +10,17 @@ import com.cpe.springboot.message.model.MessageModel;
 import com.cpe.springboot.user.controller.UserRepository;
 import com.cpe.springboot.user.model.UserModel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
@@ -31,6 +34,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageDTO> getMessagesBySenderAndReceiver(int senderId, int receiverId) {
+        log.info("Getting all messages for sender {} and receiver {}", senderId, receiverId);
         List<MessageModel> messages = messageRepository
                 .findAllByReceiver_IdAndSender_IdOrderByCreationDateAsc(receiverId, senderId)
                 .orElse(Collections.emptyList());
@@ -81,8 +85,8 @@ public class MessageServiceImpl implements MessageService {
                 .receiver(receiverModel)
                 .sender(senderModel)
                 .content(newMessage.getContent())
-                .creationDate(LocalDate.now())
-                .lastModifiedDate(LocalDate.now())
+                .creationDate(LocalDateTime.now())
+                .lastModifiedDate(LocalDateTime.now())
                 .build();
 
         return messageRepository.save(savedMessage).toDTOOut();

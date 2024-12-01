@@ -1,34 +1,61 @@
-import { CSSProperties, useContext, useState } from "react";
+import { CSSProperties, useState } from "react";
 import { motion } from "motion/react";
-import { SocketContext } from "../../stores/context/SocketContext";
-import { sendMessage } from "../../services/websocket/websocket.service";
+import webSocketService from "../../services/websocket/websocket.service";
+import {EventEmitter} from "../../services/events/EventEmitter.ts";
 
-const InputMessage = () => {
+interface InputMessageProps {
+  activeTab?: string;
+  emitter?: EventEmitter
+}
+
+const InputMessage = ({ activeTab = 'public', emitter}: InputMessageProps) => {
   const [message, setMessage] = useState<string>("");
+  const [isSending, setIsSending] = useState(false);
+  const userId = sessionStorage.getItem("userId");
 
-  const socket = useContext(SocketContext).sharedSocket;
-  const sendMessageOnline = () => {
-    sendMessage("all", message, socket);
-    setMessage("");
+  const sendMessageOnline = async () => {
+    if (message.trim().length === 0 || isSending || !userId) return;
+
+    try {
+      setIsSending(true);
+      
+      if (activeTab === 'public') {
+        await webSocketService.sendBroadcastMessage(message);
+      } else {
+        await webSocketService.sendPrivateMessage(activeTab, userId, message);
+      }
+
+    } catch (error) {
+      console.error("Erreur lors de l'envoi du message:", error);
+    } finally {
+      console.log(emitter);
+      let msgProps = {
+        id: 1,
+        sender_id: userId,
+        receiver_id: String(activeTab),
+        content: message,
+        creationDate: new Date(),
+      };
+
+      emitter?.emit("newMessageFromCurrentUser", msgProps);
+      setMessage("");
+      setIsSending(false);
+    }
   };
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ): void => {
-    if (event.key === "Enter" && message.length > 0) {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === "Enter" && message.length > 0 && !isSending) {
       sendMessageOnline();
     }
   };
 
   const messageGroupStyle: CSSProperties = {
-    //position: "fixed",
     display: "flex",
-    //width: "100%",
     justifyContent: "center",
     gap: "10px",
     padding: "10px",
     backgroundColor: "#f5f5f5",
-    borderTop: "1px solid #ddd", // Ligne séparatrice
+    borderTop: "1px solid #ddd",
   };
 
   const inputStyle: CSSProperties = {
@@ -44,7 +71,7 @@ const InputMessage = () => {
 
   const buttonStyle: CSSProperties = {
     borderRadius: "5px",
-    backgroundColor: message.length === 0 ? "grey" : "blueviolet",
+    backgroundColor: message.length === 0 || isSending ? "grey" : "blueviolet",
     border: "none",
     color: "white",
     width: "5vw",
@@ -53,7 +80,7 @@ const InputMessage = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    cursor: message.length === 0 ? "not-allowed" : "pointer",
+    cursor: message.length === 0 || isSending ? "not-allowed" : "pointer",
   };
 
   return (
@@ -65,14 +92,20 @@ const InputMessage = () => {
         onChange={(event) => setMessage(event.target.value)}
         onKeyDown={handleKeyDown}
         maxLength={500}
+        disabled={isSending}
+        placeholder={
+          activeTab === "public"
+            ? "Message public..."
+            : `Message à ${activeTab}...`
+        }
       />
       <motion.button
-        disabled={message.length === 0}
+        disabled={message.length === 0 || isSending}
         onTap={sendMessageOnline}
-        whileTap={{ scale: message.length === 0 ? 1.0 : 0.9 }}
+        whileTap={{ scale: message.length === 0 || isSending ? 1.0 : 0.9 }}
         style={buttonStyle}
       >
-        Send
+        {isSending ? "..." : "Send"}
       </motion.button>
     </div>
   );
