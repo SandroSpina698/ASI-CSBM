@@ -1,12 +1,14 @@
 import { CSSProperties, useState } from "react";
 import { motion } from "motion/react";
 import webSocketService from "../../services/websocket/websocket.service";
+import {EventEmitter} from "../../services/events/EventEmitter.ts";
 
 interface InputMessageProps {
-  activeTab?: string; 
+  activeTab?: string;
+  emitter?: EventEmitter
 }
 
-const InputMessage = ({ activeTab = 'public' }: InputMessageProps) => {
+const InputMessage = ({ activeTab = 'public', emitter}: InputMessageProps) => {
   const [message, setMessage] = useState<string>("");
   const [isSending, setIsSending] = useState(false);
   const userId = sessionStorage.getItem("userId");
@@ -23,10 +25,20 @@ const InputMessage = ({ activeTab = 'public' }: InputMessageProps) => {
         await webSocketService.sendPrivateMessage(activeTab, userId, message);
       }
 
-      setMessage("");
     } catch (error) {
       console.error("Erreur lors de l'envoi du message:", error);
     } finally {
+      console.log(emitter);
+      let msgProps = {
+        id: 1,
+        sender_id: userId,
+        receiver_id: String(activeTab),
+        content: message,
+        creationDate: new Date(),
+      };
+
+      emitter?.emit("newMessageFromCurrentUser", msgProps);
+      setMessage("");
       setIsSending(false);
     }
   };

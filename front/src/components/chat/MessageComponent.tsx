@@ -14,7 +14,7 @@ const MessageComponent = ({
   timestamp,
 }: Props) => {
   // Get first letter and capitalize it
-  const initial = user_id.charAt(0).toUpperCase();
+  const initial = String(user_id).charAt(0).toUpperCase();
 
   const containerStyle = {
     display: "flex",

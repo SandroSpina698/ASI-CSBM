@@ -9,6 +9,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -22,8 +23,8 @@ public class MessageDTO implements Serializable {
 
     public MessageModel toModel() {
         return MessageModel.builder()
-                .creationDate(LocalDate.now())
-                .lastModifiedDate(LocalDate.now())
+                .creationDate(LocalDateTime.now())
+                .lastModifiedDate(LocalDateTime.now())
                 .content(content)
                 .sender(new UserModel(sender))
                 .receiver(new UserModel(receiver))

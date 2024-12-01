@@ -22,7 +22,6 @@ class WebSocketService {
     message: string,
   ): Promise<void> {
     try {
-      console.log("AVANT ",recipientId)
       const response = await fetch(
         `${CHAT_SERVER_URL}/${recipientId}/${senderId}/message`,
         {
@@ -33,7 +32,6 @@ class WebSocketService {
           body: JSON.stringify({ message }),
         },
       );
-      console.log("APRES ",recipientId)
 
       if (!response.ok) {
         throw new Error("Failed to send private message");

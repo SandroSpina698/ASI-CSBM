@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -37,16 +38,16 @@ public class MessageModel implements Serializable {
     private String content;
 
     @Column(name = "creation_date", nullable = false, updatable = false)
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @Column(name = "last_modified_date")
-    private LocalDate lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
     public MessageDTO toDTOIn() {
         return new MessageDTO(new UserDTO(this.receiver), new UserDTO(this.receiver), this.content);
     }
 
     public com.cpe.springboot.message.dto.out.MessageDTO toDTOOut() {
-        return new com.cpe.springboot.message.dto.out.MessageDTO(this.id,new UserDTO(this.receiver), new UserDTO(this.receiver), this.content, this.creationDate, this.lastModifiedDate);
+        return new com.cpe.springboot.message.dto.out.MessageDTO(this.id,new UserDTO(this.receiver), new UserDTO(this.sender), this.content, this.creationDate, this.lastModifiedDate);
     }
 }
