@@ -5,8 +5,10 @@ import webSocketService from "../../services/websocket/websocket.service";
 import MessageComponent from "./MessageComponent";
 import InputMessage from "./Input";
 
+
 interface MessageProps {
-  sender_id?: string;
+  sender_id: string;
+  receiver_id:string;
   content: string;
   creationDate: string;
 }
@@ -32,8 +34,23 @@ const ChatList = () => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleMessage = (message: MessageProps) => {
-      setPublicMessages(prev => [...prev, message]);
+    const handlePublicMessage = (message: MessageProps) => {
+      setPublicMessages(prev => {
+        // Vérifier si le message existe déjà
+        const messageExists = prev.some(
+          msg => 
+            msg.content === message.content && 
+            msg.sender_id === message.sender_id && 
+            msg.creationDate === message.creationDate
+        );
+
+        if (messageExists) {
+          return prev;
+        }
+
+        return [...prev, message];
+      });
+
       scrollToBottom();
     };
 
@@ -46,20 +63,41 @@ const ChatList = () => {
         if (!conversation) {
           return [...prev, { userId: senderId, messages: [message] }];
         }
+        
+        // Vérifier si le message existe déjà dans la conversation
+        const messageExists = conversation.messages.some(
+          msg => 
+            msg.content === message.content && 
+            msg.sender_id === message.sender_id && 
+            msg.creationDate === message.creationDate
+        );
+
+        if (messageExists) {
+          return prev;
+        }
+
         return prev.map(conv => 
           conv.userId === senderId 
             ? { ...conv, messages: [...conv.messages, message] }
             : conv
         );
       });
+      
       scrollToBottom();
     };
 
-    webSocketService.onMessage(handleMessage);
-    socket.on(userId, handlePrivateMessage);
+    // Nettoyer les anciens listeners avant d'en ajouter de nouveaux
+    socket.off("message");
+    socket.off(userId);
+
+    webSocketService.onMessage((message)=>{
+      console.log("JDADWAAD",message)
+      !message.receiver_id  ? handlePublicMessage(message) : handlePrivateMessage(message)
+    });
 
     return () => {
-      socket.off(userId, handlePrivateMessage);
+      socket.off("message");
+      socket.off(userId);
     };
   }, [socket, userId]);
 
@@ -67,16 +105,14 @@ const ChatList = () => {
     const fetchConnectedUsers = async () => {
       try {
         const users = await webSocketService.getConnectedUsers();
-        setConnectedUsers(users.filter(id => id !== userId));
+        setConnectedUsers(users); 
       } catch (error) {
         console.error("Failed to fetch connected users:", error);
       }
     };
 
     fetchConnectedUsers();
-
-    const interval = setInterval(fetchConnectedUsers, 10000); // Rafraîchir la liste toutes les 10 secondes
-
+    const interval = setInterval(fetchConnectedUsers, 10000);
     return () => clearInterval(interval);
   }, [userId]);
 
@@ -84,6 +120,10 @@ const ChatList = () => {
     if (!privateConversations.find(conv => conv.userId === targetUserId)) {
       try {
         const history = await webSocketService.getMessageHistory(userId, targetUserId);
+        console.log("conv historique : ",history)
+        const history2 = await webSocketService.getMessageHistory(targetUserId,userId );
+        console.log("conv historique : ",history2)
+
         setPrivateConversations(prev => [...prev, { userId: targetUserId, messages: history }]);
       } catch (error) {
         console.error("Failed to load message history:", error);
@@ -93,6 +133,7 @@ const ChatList = () => {
     setActiveTab(targetUserId);
   };
 
+  // Le reste du code JSX reste inchangé...
   return (
     <div style={{ display: 'flex', height: 'calc(100vh - 100px)' }}>
       <div style={{ width: '200px', borderRight: '1px solid #ddd', padding: '10px' }}>

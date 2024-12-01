@@ -1,5 +1,4 @@
 import ChatList from "../../components/chat/ChatList";
-import InputMessage from "../../components/chat/Input";
 
 const ChatDashBoard = () => {
   return (
@@ -9,7 +8,6 @@ const ChatDashBoard = () => {
         <div style={{ flex: 1, overflowY: "auto" }}>
           <ChatList />
         </div>
-        {/* <InputMessage /> */}
       </div>
     </div>
   );

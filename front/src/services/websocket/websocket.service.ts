@@ -22,6 +22,7 @@ class WebSocketService {
     message: string,
   ): Promise<void> {
     try {
+      console.log("AVANT ",recipientId)
       const response = await fetch(
         `${CHAT_SERVER_URL}/${recipientId}/${senderId}/message`,
         {
@@ -32,6 +33,7 @@ class WebSocketService {
           body: JSON.stringify({ message }),
         },
       );
+      console.log("APRES ",recipientId)
 
       if (!response.ok) {
         throw new Error("Failed to send private message");
@@ -96,15 +98,16 @@ class WebSocketService {
 
   async getConnectedUsers(): Promise<string[]> {
     try {
-      const response = await fetch(`${WEBSOCKET_SERVER_URL}/api/users/`);
+      const response = await fetch(`${CHAT_SERVER_URL}/getconnectedusers`);
       
       if (!response.ok) {
         throw new Error("Failed to get connected users");
       }
   
       const data = await response.json();
-      return data.users;
-    } catch (error) {
+      const currentUserId = sessionStorage.getItem("userId");
+      return data.users.filter((id: string | null) => id != currentUserId); 
+      } catch (error) {
       throw new Error(`Error getting connected users: ${error}`);
     }
   }
