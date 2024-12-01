@@ -15,6 +15,5 @@ export const registerWebSocket = (user_id: string) => {
         socket.emit('register', user_id);
         console.log(`Registered user: ${user_id}`);
     });
-
     return socket
 }

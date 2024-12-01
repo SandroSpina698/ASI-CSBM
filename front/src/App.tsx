@@ -19,11 +19,11 @@ function App() {
               <CMSBNavbar/>
               <div className={"application-body"}>
                   <Routes>
-                      <Route exact path="/" element={<Dashboard/>}/>
-                      <Route exact path="/profile" element={<Profile/>}/>
-                      <Route exact path="/auth" element={<Auth/>}/>
-                      <Route exact path="/stock" element={<Stock/>}/>
-                      <Route exact path="/market" element={<Market/>}/>
+                      <Route path="/" element={<Dashboard/>}/>
+                      <Route path="/profile" element={<Profile/>}/>
+                      <Route path="/auth" element={<Auth/>}/>
+                      <Route path="/stock" element={<Stock/>}/>
+                      <Route path="/market" element={<Market/>}/>
                       <Route path="/play" element={<WaitingRoom/>}/>
                   </Routes>
               </div>

@@ -17,7 +17,6 @@ export default function GameCard(props: GameCardProps) {
 
     function select(){
         if(userId != null){
-            console.log("Card selected :" + props.card.id);
             props.onCardSelect(props.card.id);
         }
     }
