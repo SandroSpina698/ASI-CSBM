@@ -2,11 +2,9 @@ import {BASE_URL, SERVER_GAME_URL} from "../../types/CommonConstants.ts";
 import {Card} from "../../types/interfaces/Card";
 
 export const joinQueue = (userId : string): Promise<void | string> => {
-    console.log(userId);
-    let body = {
+    const body = {
         userId : userId
     }
-
     return fetch(`${SERVER_GAME_URL}/games/join`, {
         method: 'POST',
         headers: {
